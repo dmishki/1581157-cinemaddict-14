@@ -1,4 +1,4 @@
-const createSiteMenu = function () {
+const createSiteMenu = () => {
   return `<nav class="main-navigation">
   <div class="main-navigation__items">
     <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
@@ -10,7 +10,7 @@ const createSiteMenu = function () {
 </nav>`;
 };
 
-const createSiteSorting = function () {
+const createSiteSorting = () => {
   return `<ul class="sort">
   <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
   <li><a href="#" class="sort__button">Sort by date</a></li>
