@@ -40,14 +40,14 @@ const renderFilmCards = (cardsQuantity) => {
 };
 
 const renderFilmExtraCards = (cardsQuantity) => {
-  const filmListArray = siteMain.querySelectorAll('.films-list--extra');
+  const filmLists = siteMain.querySelectorAll('.films-list--extra');
 
-  filmListArray.forEach(filmList => {
+  filmLists.forEach((filmList) => {
     const filmListContainer = filmList.querySelector('.films-list__container');
     for (let i = 0; i < cardsQuantity; i++) {
       render(filmListContainer, createFilmCard(), 'beforeend');
     }
-  })
+  });
 };
 
 render(siteHeader, createUserProfile(), 'beforeend');
