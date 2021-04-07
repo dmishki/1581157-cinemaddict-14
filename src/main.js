@@ -22,13 +22,13 @@ import {
 
 import {
   generateFilmCard
-} from './view/film-information.js';
+} from './mock/film.js';
 
 import {
   generateFilter
 } from './view/filters.js';
 
-const FILMS_COUNT = 20;
+const FILMS_COUNT = 15;
 const FILMS_RENDERING_STEP = 5;
 const EXTRA_CARDS_COUNT = 2;
 const siteBody = document.querySelector('body');
@@ -44,10 +44,10 @@ const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const renderFilmCards = (cardsQuantity, filmsArray) => {
+const renderFilmCards = (filmsList) => {
   const filmListContainer = siteMain.querySelector('.films-list__container');
-  for (let i = 0; i < cardsQuantity; i++) {
-    render(filmListContainer, createFilmCard(filmsArray[i]), 'beforeend');
+  for (const film of filmsList) {
+    render(filmListContainer, createFilmCard(film), 'beforeend');
   }
 };
 
@@ -67,20 +67,20 @@ render(siteMain, createSiteMenu(filtersValues), 'beforeend');
 render(siteMain, createSiteSorting(), 'beforeend');
 render(siteMain, createFilmList(), 'beforeend');
 
-
-if (filmCards.length >= FILMS_RENDERING_STEP) {
-  let renderedFilmsCount = FILMS_RENDERING_STEP;
-  renderFilmCards(renderedFilmsCount, filmCards);
-  let filmsCardsToRender = filmCards.slice(renderedFilmsCount, filmCards.length);
+if (filmCards.length > 0) {
+  let renderedFilmsCount = 0;
+  let filmsCardsToRender = filmCards.slice(renderedFilmsCount, FILMS_RENDERING_STEP);
+  renderFilmCards(filmsCardsToRender);
+  renderedFilmsCount += FILMS_RENDERING_STEP;
   const showMoreButton = document.querySelector('.films-list__show-more');
 
   showMoreButton.addEventListener('click', (evt) => {
     evt.preventDefault();
-    renderFilmCards(FILMS_RENDERING_STEP, filmsCardsToRender);
+    filmsCardsToRender = filmCards.slice(renderedFilmsCount, renderedFilmsCount + FILMS_RENDERING_STEP);
+    renderFilmCards(filmsCardsToRender);
     renderedFilmsCount += FILMS_RENDERING_STEP;
-    filmsCardsToRender = filmCards.slice(renderedFilmsCount, filmCards.length);
 
-    if (filmsCardsToRender.length < FILMS_RENDERING_STEP) {
+    if (filmCards.length <= renderedFilmsCount) {
       showMoreButton.remove();
     }
   });

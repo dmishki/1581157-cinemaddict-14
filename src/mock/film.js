@@ -1,10 +1,8 @@
-import dayjs from 'dayjs';
-
 import {
   getRandomInteger,
   getRandomArrayElement,
   getRandomDate
-} from './utils.js';
+} from '../view/utils.js';
 
 const getRandomDescription = () => {
   const MIN_DESCRIPTIONS_QUANTITY = 1;
@@ -164,13 +162,12 @@ const getRandomEmoji = () => {
 };
 
 const generateRandomComments = () => {
-  const date = getRandomDate();
   const emojiUrl = './images/emoji/' + getRandomEmoji() + '.png';
   return {
     comment: getRandomText(),
     emoji: emojiUrl,
     author: getRandomName(),
-    date: dayjs(date).format('YYYY/MM/DD hh:mm'),
+    date: getRandomDate(),
   };
 };
 
@@ -188,14 +185,13 @@ const generateRandomCommentsSize = () => {
 const generateFilmCard = () => {
   const filmName = getRandomFilmName();
   const posterUrl = './images/posters/' + filmName + '.jpg';
-  const releaseDate = getRandomDate();
   const fullDescription = getRandomDescription();
 
   return {
     name: filmName,
     poster: posterUrl,
     rating: getRandomRating(),
-    year: dayjs(releaseDate).format('YYYY'),
+    date: getRandomDate(),
     duration: getRandomFilmDuration(),
     genres: getRandomFilmGenre(),
     description: reduceDescription(fullDescription),
@@ -204,13 +200,12 @@ const generateFilmCard = () => {
     producer: getRandomName(),
     writers: getRandomNamesList(),
     actors: getRandomNamesList(),
-    fullReleaseDate: dayjs(releaseDate).format('DD MMMM YYYY'),
     country: getRandomCountry(),
     fullDescription,
     ageRating: getAgeRating(),
-    isWatchlist: Boolean(getRandomInteger(0, 1)),
-    isWatched: Boolean(getRandomInteger(0, 1)),
-    isFavorite: Boolean(getRandomInteger(0, 1)),
+    isWatchlist: Boolean(Math.random() > 0.5),
+    isWatched: Boolean(Math.random() > 0.5),
+    isFavorite: Boolean(Math.random() > 0.5),
   };
 };
 

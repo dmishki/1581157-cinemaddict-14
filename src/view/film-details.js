@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 const createFilmDetailsPopup = (filmCard) => {
   document.querySelector('body').classList.add('hide-overflow');
   const {
@@ -11,7 +13,7 @@ const createFilmDetailsPopup = (filmCard) => {
     producer,
     writers,
     actors,
-    fullReleaseDate,
+    date,
     country,
     fullDescription,
     ageRating,
@@ -33,7 +35,7 @@ const createFilmDetailsPopup = (filmCard) => {
      <p class="film-details__comment-text">${it.comment}</p>
      <p class="film-details__comment-info">
        <span class="film-details__comment-author">${it.author}</span>
-       <span class="film-details__comment-day">${it.date}</span>
+       <span class="film-details__comment-day">${dayjs(it.date).format('YYYY/MM/DD hh:mm')}</span>
        <button class="film-details__comment-delete">Delete</button>
      </p>
    </div>
@@ -80,7 +82,7 @@ const createFilmDetailsPopup = (filmCard) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${fullReleaseDate}</td>
+              <td class="film-details__cell">${dayjs(date).format('DD MMMM YYYY')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
