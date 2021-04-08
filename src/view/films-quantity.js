@@ -1,5 +1,5 @@
-const createFilmsQuanity = () => {
-  return '<p>130 291 movies inside</p>';
+const createFilmsQuanity = (filmsArray) => {
+  return `<p>${filmsArray.length} movies inside</p>`;
 };
 
 export {
