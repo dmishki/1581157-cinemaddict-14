@@ -2,18 +2,20 @@ import {
   createElement
 } from './utils.js';
 
-const createFilmsQuanityTemplate = (filmsList) => {
-  return `<p>${filmsList.length} movies inside</p>`;
+const createFilmsRatedTemplate = () => {
+  return `<section class="films-list films-list--extra">
+  <h2 class="films-list__title">Top rated</h2>
+  <div class="films-list__container"></div>
+  </section>`;
 };
 
-export default class FilmsQuanity {
-  constructor(filmsList) {
+export default class FilmsRated {
+  constructor() {
     this._element = null;
-    this._filmsList = filmsList;
   }
 
   getTemplate() {
-    return createFilmsQuanityTemplate(this._filmsList);
+    return createFilmsRatedTemplate();
   }
 
   getElement() {

@@ -1,7 +1,10 @@
 import dayjs from 'dayjs';
 
-const createFilmDetailsPopup = (filmCard) => {
-  document.querySelector('body').classList.add('hide-overflow');
+import {
+  createElement
+} from './utils.js';
+
+const createFilmDetailsPopupTemplate = (filmCard) => {
   const {
     name,
     poster,
@@ -156,6 +159,25 @@ const createFilmDetailsPopup = (filmCard) => {
 </section>`;
 };
 
-export {
-  createFilmDetailsPopup
-};
+export default class FilmDetailsPopup {
+  constructor(filmCard) {
+    this._element = null;
+    this._filmCard = filmCard;
+  }
+
+  getTemplate() {
+    return createFilmDetailsPopupTemplate(this._filmCard);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

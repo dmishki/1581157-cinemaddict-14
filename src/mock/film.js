@@ -203,9 +203,9 @@ const generateFilmCard = () => {
     country: getRandomCountry(),
     fullDescription,
     ageRating: getAgeRating(),
-    isWatchlist: Boolean(Math.random() > 0.5),
-    isWatched: Boolean(Math.random() > 0.5),
-    isFavorite: Boolean(Math.random() > 0.5),
+    isWatchlist: Math.random() > 0.5,
+    isWatched: Math.random() > 0.5,
+    isFavorite: Math.random() > 0.5,
   };
 };
 
