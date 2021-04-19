@@ -1,8 +1,5 @@
 import dayjs from 'dayjs';
-
-import {
-  createElement
-} from './utils.js';
+import AbstractView from './abstract.js';
 
 const createFilmCardTemplate = (filmCard) => {
   const {
@@ -38,25 +35,26 @@ const createFilmCardTemplate = (filmCard) => {
 </article>`;
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractView {
   constructor(filmCard) {
-    this._element = null;
+    super();
     this._filmCard = filmCard;
+    this._renderFilmPopupHandler = this._renderFilmPopupHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._filmCard);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _renderFilmPopupHandler(evt) {
+    evt.preventDefault();
+    this._callback.renderFilmPopup();
   }
 
-  removeElement() {
-    this._element = null;
+  renderFilmPopupHandler(callback) {
+    this._callback.renderFilmPopup = callback;
+    this.getElement().querySelector('.film-card__comments').addEventListener('click', this._renderFilmPopupHandler);
+    this.getElement().querySelector('.film-card__poster').addEventListener('click', this._renderFilmPopupHandler);
+    this.getElement().querySelector('.film-card__title').addEventListener('click', this._renderFilmPopupHandler);
   }
 }

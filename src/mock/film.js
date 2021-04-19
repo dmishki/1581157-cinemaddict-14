@@ -2,7 +2,7 @@ import {
   getRandomInteger,
   getRandomArrayElement,
   getRandomDate
-} from '../view/utils.js';
+} from '../utils/common.js';
 
 const getRandomDescription = () => {
   const MIN_DESCRIPTIONS_QUANTITY = 1;
