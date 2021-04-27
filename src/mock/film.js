@@ -4,6 +4,10 @@ import {
   getRandomDate
 } from '../utils/common.js';
 
+import {
+  nanoid
+} from 'nanoid';
+
 const getRandomDescription = () => {
   const MIN_DESCRIPTIONS_QUANTITY = 1;
   const MAX_DESCRIPTIONS_QUANTITY = 5;
@@ -188,6 +192,7 @@ const generateFilmCard = () => {
   const fullDescription = getRandomDescription();
 
   return {
+    id: nanoid(),
     name: filmName,
     poster: posterUrl,
     rating: getRandomRating(),
