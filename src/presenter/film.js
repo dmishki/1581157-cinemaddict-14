@@ -1,7 +1,8 @@
 import {
   render,
   RenderPosition,
-  remove
+  remove,
+  replace
 } from '../utils/render.js';
 
 import FilmCardView from '../view/film-card.js';
@@ -32,25 +33,30 @@ export default class Film {
 
   init(film) {
     this._film = film;
-    const filmCardComponent = this._filmCardComponent;
-    const filmDetailsPopupComponent = this._filmDetailsPopupComponent;
+    const prevfilmCardComponent = this._filmCardComponent;
+    const prevfilmDetailsPopupComponent = this._filmDetailsPopupComponent;
 
     this._filmCardComponent = new FilmCardView(film);
     this._filmDetailsPopupComponent = new FilmDetailsPopupView(film);
 
     this._filmCardComponent.setWatchListClickHandler(this._handleWatchListClick);
-    this._filmCardComponent.setWatchedListClickHandler(this._handleWatchListClick);
+    this._filmCardComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-
-    if (filmCardComponent === null || filmDetailsPopupComponent === null) {
-      render(this._filmsContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
-    }
 
     this._filmCardComponent.renderFilmPopupHandler(() => {
       if (this._mode === Mode.DEFAULT) {
         this._renderFilmDetailsPopup();
       }
     });
+
+    if (prevfilmCardComponent === null || prevfilmDetailsPopupComponent === null) {
+      render(this._filmsContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this._filmsContainer.contains(prevfilmCardComponent.getElement())) {
+      replace(this._filmCardComponent, prevfilmCardComponent);
+    }
   }
 
   resetView() {
@@ -63,13 +69,13 @@ export default class Film {
     remove(this._filmDetailsPopupComponent);
     siteBody.classList.remove('hide-overflow');
     this._mode = Mode.DEFAULT;
+    document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
   _escKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this._removeFilmDetailsPopup();
-      document.removeEventListener('keydown', this._escKeyDownHandler);
     }
   }
 

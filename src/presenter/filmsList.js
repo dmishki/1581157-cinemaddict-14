@@ -18,13 +18,11 @@ import ShowMoreButtonView from '../view/show-more-button.js';
 import FilmPresenter from './film.js';
 
 const FILMS_RENDERING_STEP = 5;
-const EXTRA_FILMS_COUNT = 2;
 
 export default class FilmsList {
   constructor(filmsListContainer) {
     this._filmsListContainer = filmsListContainer;
     this._renderedFilmsCount = FILMS_RENDERING_STEP;
-    this._extraFilmsCount = EXTRA_FILMS_COUNT;
     this._sortComponent = new SiteSortingView();
     this._filmsSectionComponent = new FilmsSectionView();
     this._filmsRatedComponent = new FilmsRatedView();
@@ -77,12 +75,12 @@ export default class FilmsList {
 
   _renderRatedFilms() {
     render(this._filmsSectionComponent, this._filmsRatedComponent, RenderPosition.BEFOREEND);
-    this._renderFilms(0, this._extraFilmsCount, this._filmsRatedContainerComponent);
+    this._renderFilms(11, 13, this._filmsRatedContainerComponent);
   }
 
   _renderCommentedFilms() {
     render(this._filmsSectionComponent, this._filmsCommentedComponent, RenderPosition.BEFOREEND);
-    this._renderFilms(0, this._extraFilmsCount, this._filmsCommentedContainerComponent);
+    this._renderFilms(13, 15, this._filmsCommentedContainerComponent);
   }
 
   _renderNoFilms() {
@@ -109,12 +107,12 @@ export default class FilmsList {
       .forEach((presenter) => presenter.resetView());
   }
 
-  _handleFilmChange(updatedTask) {
-    this._filmCards = updateItem(this._filmCards, updatedTask);
-    this._filmPresenter[updatedTask.id].init(updatedTask);
+  _handleFilmChange(updatedFilm) {
+    this._filmCards = updateItem(this._filmCards, updatedFilm);
+    this._filmPresenter[updatedFilm.id].init(updatedFilm);
   }
 
-  _clearTaskList() {
+  _clearFilmsList() {
     Object
       .values(this._filmPresenter)
       .forEach((presenter) => presenter.destroy());
