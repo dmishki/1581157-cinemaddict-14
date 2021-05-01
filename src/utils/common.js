@@ -37,9 +37,19 @@ const updateItem = (items, update) => {
   ];
 };
 
+const compareDates = (filmA, filmB) => {
+  return dayjs(filmB.date).diff(dayjs(filmA.date));
+};
+
+const compareRatings = (filmA, filmB) => {
+  return filmB.rating - filmA.rating;
+};
+
 export {
   getRandomInteger,
   getRandomArrayElement,
   getRandomDate,
-  updateItem
+  updateItem,
+  compareDates,
+  compareRatings
 };

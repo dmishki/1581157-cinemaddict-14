@@ -5,8 +5,14 @@ import {
 } from '../utils/render.js';
 
 import {
-  updateItem
+  updateItem,
+  compareDates,
+  compareRatings
 } from '../utils/common.js';
+
+import {
+  SortType
+} from '../const.js';
 
 import SiteSortingView from '../view/sorting.js';
 import FilmsSectionView from '../view/films-section.js';
@@ -36,16 +42,20 @@ export default class FilmsList {
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleFilmChange = this._handleFilmChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._filmPresenter = {};
+    this._currentSortType = SortType.DEFAULT;
   }
 
   init(filmСards) {
     this._filmCards = filmСards.slice();
+    this._sourcedFilmCards = filmСards.slice();
     this._renderMovies();
   }
 
   _renderSort() {
     render(this._filmsListContainer, this._sortComponent, RenderPosition.BEFOREEND);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderFilmsSection() {
@@ -65,8 +75,9 @@ export default class FilmsList {
   }
 
   _renderFilmsList() {
-    render(this._filmsSectionComponent, this._filmsListComponent, RenderPosition.BEFOREEND);
     this._renderFilms(0, this._renderedFilmsCount, this._filmsContainerComponent);
+    this._renderRatedFilms();
+    this._renderCommentedFilms();
 
     if (this._filmCards.length > this._renderedFilmsCount) {
       this._renderShowMoreButton();
@@ -109,7 +120,33 @@ export default class FilmsList {
 
   _handleFilmChange(updatedFilm) {
     this._filmCards = updateItem(this._filmCards, updatedFilm);
+    this._sourcedFilmCards = updateItem(this._sourcedFilmCards, updatedFilm);
     this._filmPresenter[updatedFilm.id].init(updatedFilm);
+  }
+
+  _sortFilms(sortType) {
+    switch (sortType) {
+      case SortType.DATE:
+        this._filmCards.sort(compareDates);
+        break;
+      case SortType.RATING:
+        this._filmCards.sort(compareRatings);
+        break;
+      default:
+        this._filmCards = this._sourcedFilmCards.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortFilms(sortType);
+    this._clearFilmsList();
+    this._renderFilmsList();
   }
 
   _clearFilmsList() {
@@ -124,13 +161,12 @@ export default class FilmsList {
   _renderMovies() {
     this._renderSort();
     this._renderFilmsSection();
+    render(this._filmsSectionComponent, this._filmsListComponent, RenderPosition.BEFOREEND);
 
     if (this._filmCards.length === 0) {
       this._renderNoFilms();
     } else {
       this._renderFilmsList();
-      this._renderRatedFilms();
-      this._renderCommentedFilms();
     }
   }
 }

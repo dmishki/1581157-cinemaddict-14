@@ -29,6 +29,9 @@ export default class Film {
     this._handleWatchListClick = this._handleWatchListClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handlePopupWatchListClick = this._handleWatchListClick.bind(this);
+    this._handlePopupWatchedClick = this._handleWatchedClick.bind(this);
+    this._handlePopupFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(film) {
@@ -42,6 +45,9 @@ export default class Film {
     this._filmCardComponent.setWatchListClickHandler(this._handleWatchListClick);
     this._filmCardComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._filmDetailsPopupComponent.setWatchListClickHandler(this._handlePopupWatchListClick);
+    this._filmDetailsPopupComponent.setWatchedClickHandler(this._handlePopupWatchedClick);
+    this._filmDetailsPopupComponent.setFavoriteClickHandler(this._handlePopupFavoriteClick);
 
     this._filmCardComponent.renderFilmPopupHandler(() => {
       if (this._mode === Mode.DEFAULT) {
@@ -56,6 +62,10 @@ export default class Film {
 
     if (this._filmsContainer.contains(prevfilmCardComponent.getElement())) {
       replace(this._filmCardComponent, prevfilmCardComponent);
+    }
+
+    if (siteBody.contains(prevfilmDetailsPopupComponent.getElement())) {
+      replace(this._filmDetailsPopupComponent, prevfilmDetailsPopupComponent);
     }
   }
 
