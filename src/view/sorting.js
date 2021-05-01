@@ -33,7 +33,7 @@ export default class SiteSorting extends AbstractView {
   }
 
   _setSortActiveStyle(evt) {
-    document.querySelectorAll('.sort__button').forEach((it) => {
+    this.getElement().querySelectorAll('.sort__button').forEach((it) => {
       it.classList.remove('sort__button--active');
     });
     evt.target.classList.add('sort__button--active');
