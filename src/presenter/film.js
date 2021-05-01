@@ -55,6 +55,11 @@ export default class Film {
       }
     });
 
+    this._filmDetailsPopupComponent.closePopupHandler(() => {
+      this._removeFilmDetailsPopup();
+      document.removeEventListener('keydown', this._escKeyDownHandler);
+    });
+
     if (prevfilmCardComponent === null || prevfilmDetailsPopupComponent === null) {
       render(this._filmsContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
       return;
@@ -67,6 +72,9 @@ export default class Film {
     if (siteBody.contains(prevfilmDetailsPopupComponent.getElement())) {
       replace(this._filmDetailsPopupComponent, prevfilmDetailsPopupComponent);
     }
+
+    remove(prevfilmCardComponent);
+    remove(prevfilmDetailsPopupComponent);
   }
 
   resetView() {
@@ -76,7 +84,7 @@ export default class Film {
   }
 
   _removeFilmDetailsPopup() {
-    remove(this._filmDetailsPopupComponent);
+    this._filmDetailsPopupComponent.getElement().remove();
     siteBody.classList.remove('hide-overflow');
     this._mode = Mode.DEFAULT;
     document.removeEventListener('keydown', this._escKeyDownHandler);
@@ -119,11 +127,6 @@ export default class Film {
     document.addEventListener('keydown', this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.OPENED;
-
-    this._filmDetailsPopupComponent.closePopupHandler(() => {
-      this._removeFilmDetailsPopup();
-      document.removeEventListener('keydown', this._escKeyDownHandler);
-    });
   }
 
   destroy() {

@@ -28,15 +28,9 @@ export default class SiteSorting extends AbstractView {
     }
 
     evt.preventDefault();
-    this._callback.sortTypeChange(evt.target.dataset.sortType);
-    this._setSortActiveStyle(evt);
-  }
-
-  _setSortActiveStyle(evt) {
-    this.getElement().querySelectorAll('.sort__button').forEach((it) => {
-      it.classList.remove('sort__button--active');
-    });
+    this.getElement().querySelector('.sort__button--active').classList.remove('sort__button--active');
     evt.target.classList.add('sort__button--active');
+    this._callback.sortTypeChange(evt.target.dataset.sortType);
   }
 
   setSortTypeChangeHandler(callback) {
