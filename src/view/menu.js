@@ -6,7 +6,7 @@ const createFilter = (filters) => {
     count,
   } = filters;
 
-  return `<a href="#${name}" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${count}</span></a>`;
+  return `<a href="#${name.toLowerCase()}" class="main-navigation__item">${name} <span class="main-navigation__item-count">${count}</span></a>`;
 };
 
 const createSiteMenuTemplate = (filters) => {

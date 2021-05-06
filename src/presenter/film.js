@@ -84,6 +84,7 @@ export default class Film {
   }
 
   _removeFilmDetailsPopup() {
+    this._filmDetailsPopupComponent.reset(this._film);
     this._filmDetailsPopupComponent.getElement().remove();
     siteBody.classList.remove('hide-overflow');
     this._mode = Mode.DEFAULT;

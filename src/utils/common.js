@@ -14,8 +14,8 @@ const getRandomArrayElement = (Array) => {
 };
 
 const getRandomDate = () => {
-  const MAX_YEAR_GAP = 70;
-  const MAX_DAY_GAP = 14;
+  const MAX_YEAR_GAP = 2;
+  const MAX_DAY_GAP = 7;
 
   const yearGap = getRandomInteger(-MAX_YEAR_GAP, 0);
   const dayGap = getRandomInteger(-MAX_DAY_GAP, 0);
@@ -45,11 +45,18 @@ const compareRatings = (filmA, filmB) => {
   return filmB.rating - filmA.rating;
 };
 
+const calculateRuntime = (runtimeMinutes) => {
+  const hours = Math.floor(runtimeMinutes / 60);
+  const minutes = runtimeMinutes - (hours * 60);
+  return hours + 'h ' + minutes + 'm';
+};
+
 export {
   getRandomInteger,
   getRandomArrayElement,
   getRandomDate,
   updateItem,
   compareDates,
-  compareRatings
+  compareRatings,
+  calculateRuntime
 };
