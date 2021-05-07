@@ -65,10 +65,8 @@ const getRandomRating = () => {
 };
 
 const getRandomFilmDuration = () => {
-  const MIN_HOURS_DURATION = 1;
-  const MAX_HOURS_DURATION = 3;
-  const MAX_MINUTES_DURATION = 59;
-  return getRandomInteger(MIN_HOURS_DURATION, MAX_HOURS_DURATION) + 'h ' + getRandomInteger(0, MAX_MINUTES_DURATION) + 'm';
+  const MAX_MINUTES_DURATION = 220;
+  return getRandomInteger(0, MAX_MINUTES_DURATION);
 };
 
 const getRandomFilmGenre = () => {
@@ -197,7 +195,7 @@ const generateFilmCard = () => {
     poster: posterUrl,
     rating: getRandomRating(),
     date: getRandomDate(),
-    duration: getRandomFilmDuration(),
+    runtime: getRandomFilmDuration(),
     genres: getRandomFilmGenre(),
     description: reduceDescription(fullDescription),
     comments: generateRandomCommentsSize(),
@@ -208,6 +206,9 @@ const generateFilmCard = () => {
     country: getRandomCountry(),
     fullDescription,
     ageRating: getAgeRating(),
+    comment: '',
+    emoji: '',
+    isEmoji: false,
     isWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
