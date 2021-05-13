@@ -4,6 +4,10 @@ import {
   remove,
   replace
 } from '../utils/render.js';
+import {
+  UserAction,
+  UpdateType
+} from '../const.js';
 
 import FilmCardView from '../view/film-card.js';
 import FilmDetailsPopupView from '../view/film-details.js';
@@ -40,7 +44,7 @@ export default class Film {
     const prevfilmDetailsPopupComponent = this._filmDetailsPopupComponent;
 
     this._filmCardComponent = new FilmCardView(film);
-    this._filmDetailsPopupComponent = new FilmDetailsPopupView(film);
+    this._filmDetailsPopupComponent = new FilmDetailsPopupView(film, this._changeData);
 
     this._filmCardComponent.setWatchListClickHandler(this._handleWatchListClick);
     this._filmCardComponent.setWatchedClickHandler(this._handleWatchedClick);
@@ -100,6 +104,8 @@ export default class Film {
 
   _handleWatchListClick() {
     this._changeData(
+      UserAction.UPDATE_ITEM,
+      UpdateType.PATCH,
       Object.assign({},
         this._film, {
           isWatchlist: !this._film.isWatchlist,
@@ -108,6 +114,8 @@ export default class Film {
 
   _handleWatchedClick() {
     this._changeData(
+      UserAction.UPDATE_ITEM,
+      UpdateType.PATCH,
       Object.assign({},
         this._film, {
           isWatched: !this._film.isWatched,
@@ -116,6 +124,8 @@ export default class Film {
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_ITEM,
+      UpdateType.PATCH,
       Object.assign({},
         this._film, {
           isFavorite: !this._film.isFavorite,

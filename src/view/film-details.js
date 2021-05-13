@@ -1,15 +1,13 @@
 import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import SmartView from './smart.js';
 import {
   calculateRuntime
 } from '../utils/common.js';
-
-const createCommentsDateTemplate = (date) => {
-  dayjs.extend(relativeTime);
-
-  return dayjs(date).fromNow();
-};
+import {
+  render,
+  RenderPosition
+} from '../utils/render.js';
+import CommentsBlockView from './comments.js';
 
 const createFilmDetailsPopupTemplate = (data) => {
   const {
@@ -18,7 +16,6 @@ const createFilmDetailsPopupTemplate = (data) => {
     rating,
     runtime,
     genres,
-    comments,
     originalName,
     producer,
     writers,
@@ -27,9 +24,6 @@ const createFilmDetailsPopupTemplate = (data) => {
     country,
     fullDescription,
     ageRating,
-    comment,
-    emoji,
-    isEmoji,
     isWatchlist,
     isWatched,
     isFavorite,
@@ -40,22 +34,6 @@ const createFilmDetailsPopupTemplate = (data) => {
     <td class="film-details__cell">
     ${genres.map((it) => `<span class="film-details__genre">${it}</span>`).join('')}
     </td>`;
-  };
-
-  const generateComments = () => {
-    return `${comments.map((it) => `<li class="film-details__comment">
-   <span class="film-details__comment-emoji">
-     <img src="${it.emoji}" width="55" height="55" alt="emoji-smile">
-   </span>
-   <div>
-     <p class="film-details__comment-text">${it.comment}</p>
-     <p class="film-details__comment-info">
-       <span class="film-details__comment-author">${it.author}</span>
-       <span class="film-details__comment-day">${createCommentsDateTemplate(it.date)}</span>
-       <button class="film-details__comment-delete">Delete</button>
-     </p>
-   </div>
-   </li>`).join('')}`;
   };
 
   return `<section class="film-details">
@@ -132,58 +110,21 @@ const createFilmDetailsPopupTemplate = (data) => {
     </div>
 
     <div class="film-details__bottom-container">
-      <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-        <ul class="film-details__comments-list">
-        ${generateComments()}
-        </ul>
-         <div class="film-details__new-comment">
-          <div class="film-details__add-emoji-label">
-          ${isEmoji ? `<img src="images/emoji/${emoji}.png " width="55" height="55" alt="emoji-${emoji}">` : ''}
-          </div>
 
-          <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${comment}</textarea>
-          </label>
-
-          <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${emoji === 'smile' ? 'checked' : ''}>
-            <label class="film-details__emoji-label" for="emoji-smile">
-              <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${emoji === 'sleeping' ? 'checked' : ''}>
-            <label class="film-details__emoji-label" for="emoji-sleeping">
-              <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${emoji === 'puke' ? 'checked' : ''}>
-            <label class="film-details__emoji-label" for="emoji-puke">
-              <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${emoji === 'angry' ? 'checked' : ''}>
-            <label class="film-details__emoji-label" for="emoji-angry">
-              <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-            </label>
-          </div>
-        </div>
-      </section>
     </div>
   </form>
 </section>`;
 };
 
 export default class FilmDetailsPopup extends SmartView {
-  constructor(filmCard) {
+  constructor(filmCard, changeData) {
     super();
     this._data = FilmDetailsPopup.parseFilmCardToData(filmCard);
+    this._changeData = changeData;
     this._closePopupHandler = this._closePopupHandler.bind(this);
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
-    this._commentInputHandler = this._commentInputHandler.bind(this);
-    this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
     this._setInnerHandlers();
   }
 
@@ -258,16 +199,10 @@ export default class FilmDetailsPopup extends SmartView {
       .addEventListener('click', this._favoriteClickHandler);
 
     this.getElement()
-      .querySelector('.film-details__comment-input')
-      .addEventListener('input', this._commentInputHandler);
-
-    this.getElement()
-      .querySelector('.film-details__emoji-list')
-      .addEventListener('change', this._emojiChangeHandler);
-
-    this.getElement()
       .querySelector('.film-details__close-btn')
       .addEventListener('click', this._closePopupHandler);
+
+    this.renderCommentsBlock(this._data, this._changeData);
   }
 
   reset(film) {
@@ -290,18 +225,9 @@ export default class FilmDetailsPopup extends SmartView {
     return data;
   }
 
-  _commentInputHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      comment: evt.target.value,
-    }, true);
-  }
-
-  _emojiChangeHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      emoji: evt.target.value,
-      isEmoji: true,
-    });
+  renderCommentsBlock(data, changeData) {
+    const commentsContainer = this.getElement().querySelector('.film-details__bottom-container');
+    const commentsBlock = new CommentsBlockView(data, changeData);
+    render(commentsContainer, commentsBlock, RenderPosition.BEFOREEND);
   }
 }

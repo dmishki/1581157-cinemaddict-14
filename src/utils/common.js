@@ -23,20 +23,6 @@ const getRandomDate = () => {
   return dayjs().add(yearGap, 'year').add(dayGap, 'day').toDate();
 };
 
-const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
-  }
-
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1),
-  ];
-};
-
 const compareDates = (filmA, filmB) => {
   return dayjs(filmB.date).diff(dayjs(filmA.date));
 };
@@ -55,7 +41,6 @@ export {
   getRandomInteger,
   getRandomArrayElement,
   getRandomDate,
-  updateItem,
   compareDates,
   compareRatings,
   calculateRuntime
