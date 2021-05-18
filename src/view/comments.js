@@ -57,7 +57,7 @@ const createCommentsTemplate = (data) => {
       </div>
 
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(comment)}</textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${comment}</textarea>
       </label>
 
       <div class="film-details__emoji-list">
@@ -142,7 +142,7 @@ export default class CommentsBlock extends SmartView {
           comment: {
             id: nanoid(),
             emoji: this._data.emoji,
-            comment: this._data.comment,
+            comment: he.encode(this._data.comment),
             author: 'Bruce Wilson',
             date: getRandomDate(),
           },

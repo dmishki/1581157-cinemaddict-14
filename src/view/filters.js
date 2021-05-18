@@ -11,7 +11,7 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
     count,
   } = filter;
 
-  return `<a href="#${name.toLowerCase()}" class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}">${type === FilterType.ALL ? 'All movies</a>' : `${name} <span class="main-navigation__item-count">${count}</span></a>`}`;
+  return `<a href="#${name.toLowerCase()}" data-filter='${type}' class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}">${name}${type === FilterType.ALL ? '' : ` <span class="main-navigation__item-count">${count}</span></a>`}`;
 };
 
 const createFiltersTemplate = (filters, currentFilterType) => {
@@ -39,11 +39,13 @@ export default class Filters extends AbstractView {
 
   _filterTypeChangeHandler(evt) {
     evt.preventDefault();
-    this._callback.filterTypeChange(evt.target.value);
+    this._callback.filterTypeChange(evt.target.dataset.filter);
   }
 
   setFilterTypeChangeHandler(callback) {
     this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener('click', this._filterTypeChangeHandler);
+    this.getElement().querySelectorAll('a').forEach((f) => {
+      f.addEventListener('click', this._filterTypeChangeHandler);
+    });
   }
 }
