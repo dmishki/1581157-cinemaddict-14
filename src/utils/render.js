@@ -59,7 +59,13 @@ const replace = (newChild, oldChild) => {
     throw new Error('Can\'t replace unexisting elements');
   }
 
+  const scrollTop = oldChild.scrollTop;
   parent.replaceChild(newChild, oldChild);
+  if (scrollTop > 0) {
+    newChild.scrollTo({
+      top: scrollTop,
+    });
+  }
 };
 
 export {

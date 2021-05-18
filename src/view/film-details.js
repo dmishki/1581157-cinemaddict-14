@@ -152,7 +152,7 @@ export default class FilmDetailsPopup extends SmartView {
     evt.preventDefault();
     this.updateData({
       isFavorite: !this._data.isFavorite,
-    }, true);
+    });
     this._callback.favoriteClick();
   }
 
