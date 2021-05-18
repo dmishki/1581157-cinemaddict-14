@@ -96,7 +96,12 @@ export default class FilmsList {
   _renderFilm(container, film) {
     const filmPresenter = new FilmPresenter(container, this._handleViewAction, this._handleModeChange);
     filmPresenter.init(film);
-    this._filmPresenter[film.id] = filmPresenter;
+
+    if (this._filmPresenter[film.id]) {
+      this._filmPresenter[film.id].push(filmPresenter);
+    } else {
+      this._filmPresenter[film.id] = [filmPresenter];
+    }
   }
 
   _renderFilms(films, container) {
@@ -162,7 +167,7 @@ export default class FilmsList {
   _handleModeChange() {
     Object
       .values(this._filmPresenter)
-      .forEach((presenter) => presenter.resetView());
+      .forEach((presenters) => presenters.forEach((presenter) => presenter.resetView()));
   }
 
   _handleViewAction(actionType, updateType, update) {
@@ -182,7 +187,7 @@ export default class FilmsList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._filmPresenter[data.id].init(data);
+        this._filmPresenter[data.id].forEach((presenter) => presenter.init(data));
         break;
       case UpdateType.MINOR:
         this._clearFilmsList();
@@ -218,7 +223,7 @@ export default class FilmsList {
 
     Object
       .values(this._filmPresenter)
-      .forEach((film) => film.destroy());
+      .forEach((filmPresenters) => filmPresenters.forEach((filmPresenter) => filmPresenter.destroy()));
     this._filmPresenter = {};
 
     remove(this._sortComponent);
