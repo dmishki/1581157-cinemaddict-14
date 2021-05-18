@@ -164,10 +164,10 @@ const getRandomEmoji = () => {
 };
 
 const generateRandomComments = () => {
-  const emojiUrl = './images/emoji/' + getRandomEmoji() + '.png';
   return {
+    id: nanoid(),
     comment: getRandomText(),
-    emoji: emojiUrl,
+    emoji: getRandomEmoji(),
     author: getRandomName(),
     date: getRandomDate(),
   };

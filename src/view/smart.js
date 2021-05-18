@@ -13,9 +13,16 @@ export default class Smart extends Abstract {
 
     const newElement = this.getElement();
 
+    const scrollTop = prevElement.scrollTop;
     parent.replaceChild(newElement, prevElement);
 
     this.restoreHandlers();
+
+    if (scrollTop > 0) {
+      this.getElement().scrollTo({
+        top: scrollTop,
+      });
+    }
   }
 
   updateData(update, justDataUpdating) {

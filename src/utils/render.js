@@ -32,6 +32,10 @@ const createElement = (template) => {
 };
 
 const remove = (component) => {
+  if (component === null) {
+    return;
+  }
+
   if (!(component instanceof Abstract)) {
     throw new Error('Can remove only components');
   }
@@ -55,7 +59,13 @@ const replace = (newChild, oldChild) => {
     throw new Error('Can\'t replace unexisting elements');
   }
 
+  const scrollTop = oldChild.scrollTop;
   parent.replaceChild(newChild, oldChild);
+  if (scrollTop > 0) {
+    newChild.scrollTo({
+      top: scrollTop,
+    });
+  }
 };
 
 export {
