@@ -37,11 +37,32 @@ const calculateRuntime = (runtimeMinutes) => {
   return hours + 'h ' + minutes + 'm';
 };
 
+const calculateProfileRank = (films) => {
+  const watchedFilmsCount = films.filter((film) => film.isWatched).length;
+
+  if (watchedFilmsCount === 0) {
+    return '';
+  }
+
+  if (watchedFilmsCount < 11) {
+    return 'Novice';
+  }
+
+  if (watchedFilmsCount < 21) {
+    return 'Fan';
+  }
+
+  if (watchedFilmsCount >= 21) {
+    return 'Movie buff';
+  }
+};
+
 export {
   getRandomInteger,
   getRandomArrayElement,
   getRandomDate,
   compareDates,
   compareRatings,
-  calculateRuntime
+  calculateRuntime,
+  calculateProfileRank
 };

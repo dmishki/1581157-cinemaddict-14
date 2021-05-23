@@ -252,4 +252,14 @@ export default class FilmsList {
       this._renderFilmsList();
     }
   }
+
+  hideFilms() {
+    this._filmsSectionComponent.hide();
+    this._sortComponent.hide();
+  }
+
+  showFilms() {
+    this._filmsSectionComponent.show();
+    this._sortComponent.show();
+  }
 }
