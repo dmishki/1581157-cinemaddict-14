@@ -23,12 +23,14 @@ const createStatsTemplate = (filmsList, currentFilterType) => {
     isStatsHidden,
   } = filmsList;
 
+  const watchedFilms = films.filter((film) => film.isWatched);
+
   let filteredFilms;
 
   if (dateFrom > 0) {
-    filteredFilms = countFilmsInDateRange(dateFrom, films);
+    filteredFilms = countFilmsInDateRange(dateFrom, watchedFilms);
   } else {
-    filteredFilms = films;
+    filteredFilms = watchedFilms;
   }
 
   const calculatedInfo = calculateTotalFilmsStats(filteredFilms);
@@ -135,6 +137,8 @@ export default class Stats extends SmartView {
     this._filmsModel.removeObserver(this._handleModelEvent);
     this._data = {
       films: this._filmsModel.getFilms(),
+      dateFrom: 0,
+      isStatsHidden: true,
     };
     this.updateElement();
   }
@@ -203,12 +207,14 @@ const renderChart = (statisticCtx, filmsList) => {
     dateFrom,
   } = filmsList;
 
+  const watchedFilms = films.filter((film) => film.isWatched);
+
   let filteredFilms;
 
   if (dateFrom > 0) {
-    filteredFilms = countFilmsInDateRange(dateFrom, films);
+    filteredFilms = countFilmsInDateRange(dateFrom, watchedFilms);
   } else {
-    filteredFilms = films;
+    filteredFilms = watchedFilms;
   }
 
   const stats = calculateTotalFilmsStats(filteredFilms);
