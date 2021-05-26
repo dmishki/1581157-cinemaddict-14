@@ -8,6 +8,10 @@ import {
   nanoid
 } from 'nanoid';
 
+import {
+  FilmGenres
+} from '../const.js';
+
 const getRandomDescription = () => {
   const MIN_DESCRIPTIONS_QUANTITY = 1;
   const MAX_DESCRIPTIONS_QUANTITY = 5;
@@ -70,23 +74,12 @@ const getRandomFilmDuration = () => {
 };
 
 const getRandomFilmGenre = () => {
-  const filmGenres = [
-    'Action',
-    'Comedy',
-    'Drama',
-    'Fantasy',
-    'Horror',
-    'Mystery',
-    'Romance',
-    'Thriller',
-  ];
-
   const genres = new Set();
 
-  const randomGenresQuantity = getRandomInteger(1, filmGenres.length - 1);
+  const randomGenresQuantity = getRandomInteger(1, FilmGenres.length - 1);
 
   for (let i = 0; i < randomGenresQuantity; i++) {
-    genres.add(getRandomArrayElement(filmGenres));
+    genres.add(getRandomArrayElement(FilmGenres));
   }
 
   return Array.from(genres);

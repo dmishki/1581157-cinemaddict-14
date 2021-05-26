@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import SmartView from './smart.js';
 import {
   calculateRuntime
-} from '../utils/common.js';
+} from '../utils/dates.js';
 import {
   render,
   RenderPosition

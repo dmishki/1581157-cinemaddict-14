@@ -53,7 +53,6 @@ const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.FILTERS:
       statisticComponent.hide();
-      statisticComponent.setDefaultFilter();
       siteMenuComponent.hide();
       filmListPresenter.showFilms();
       break;

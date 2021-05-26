@@ -1,10 +1,12 @@
+import AbstractView from './abstract.js';
+
 import {
   FilterType
 } from '../const.js';
+
 import {
   MenuItem
 } from '../const.js';
-import AbstractView from './abstract.js';
 
 const createFilterItemTemplate = (filter, currentFilterType) => {
   const {

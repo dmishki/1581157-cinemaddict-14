@@ -60,10 +60,9 @@ export default class Filters {
   }
 
   removeActiveClass() {
-    if (this._filterComponent.getElement().querySelector('.main-navigation__item--active')) {
-      this._filterComponent.getElement()
-        .querySelector('.main-navigation__item--active')
-        .classList.remove('main-navigation__item--active');
+    const activeElement = this._filterComponent.getElement().querySelector('.main-navigation__item--active');
+    if (activeElement) {
+      activeElement.classList.remove('main-navigation__item--active');
     }
   }
 

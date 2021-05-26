@@ -16,6 +16,19 @@ import {
   calculateProfileRank
 } from '../utils/common.js';
 
+import {
+  FilterType
+} from '../const.js';
+
+import {
+  filter
+} from '../utils/filter.js';
+
+import {
+  calculateDurationHours,
+  calculateDurationMinutes
+} from '../utils/dates.js';
+
 const createStatsTemplate = (filmsList, currentFilterType) => {
   const {
     films,
@@ -23,16 +36,8 @@ const createStatsTemplate = (filmsList, currentFilterType) => {
     isStatsHidden,
   } = filmsList;
 
-  const watchedFilms = films.filter((film) => film.isWatched);
-
-  let filteredFilms;
-
-  if (dateFrom > 0) {
-    filteredFilms = countFilmsInDateRange(dateFrom, watchedFilms);
-  } else {
-    filteredFilms = watchedFilms;
-  }
-
+  const watchedFilms = filter[FilterType.HISTORY](films);
+  const filteredFilms = dateFrom > 0 ? countFilmsInDateRange(dateFrom, watchedFilms) : watchedFilms;
   const calculatedInfo = calculateTotalFilmsStats(filteredFilms);
 
   const {
@@ -41,14 +46,8 @@ const createStatsTemplate = (filmsList, currentFilterType) => {
     topFilm,
   } = calculatedInfo;
 
-
-  const calculateDurationHours = () => {
-    return Math.floor(totalDuration / 60);
-  };
-
-  const calculateDurationMinutes = () => {
-    return totalDuration - (calculateDurationHours() * 60);
-  };
+  const durationHours = calculateDurationHours(totalDuration);
+  const durationMinutes = calculateDurationMinutes(totalDuration, durationHours);
 
   return `<section class="statistic ${isStatsHidden ? 'visually-hidden' : ''}">
   <p class="statistic__rank">
@@ -83,11 +82,11 @@ const createStatsTemplate = (filmsList, currentFilterType) => {
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Total duration</h4>
-      <p class="statistic__item-text">${calculateDurationHours()} <span class="statistic__item-description">h</span> ${calculateDurationMinutes()} <span class="statistic__item-description">m</span></p>
+      <p class="statistic__item-text">${durationHours} <span class="statistic__item-description">h</span> ${durationMinutes} <span class="statistic__item-description">m</span></p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Top genre</h4>
-      <p class="statistic__item-text">${topFilm ? topFilm : ''}</p>
+      <p class="statistic__item-text">${totalFilms !== 0 ? topFilm : ''}</p>
     </li>
   </ul>
 
@@ -207,16 +206,8 @@ const renderChart = (statisticCtx, filmsList) => {
     dateFrom,
   } = filmsList;
 
-  const watchedFilms = films.filter((film) => film.isWatched);
-
-  let filteredFilms;
-
-  if (dateFrom > 0) {
-    filteredFilms = countFilmsInDateRange(dateFrom, watchedFilms);
-  } else {
-    filteredFilms = watchedFilms;
-  }
-
+  const watchedFilms = filter[FilterType.HISTORY](films);
+  const filteredFilms = dateFrom > 0 ? countFilmsInDateRange(dateFrom, watchedFilms) : watchedFilms;
   const stats = calculateTotalFilmsStats(filteredFilms);
 
   const {
@@ -226,7 +217,7 @@ const renderChart = (statisticCtx, filmsList) => {
 
   const BAR_HEIGHT = 50;
 
-  statisticCtx.height = BAR_HEIGHT * 5;
+  statisticCtx.height = BAR_HEIGHT * genres.length;
 
   return new Chart(statisticCtx, {
     plugins: [ChartDataLabels],

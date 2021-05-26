@@ -35,3 +35,14 @@ export const StatsDate = {
   MONTH: 'MONTH',
   YEAR: 'YEAR',
 };
+
+export const FilmGenres = [
+  'Action',
+  'Comedy',
+  'Drama',
+  'Fantasy',
+  'Horror',
+  'Mystery',
+  'Romance',
+  'Thriller',
+];

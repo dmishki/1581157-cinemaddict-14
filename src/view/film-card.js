@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import AbstractView from './abstract.js';
 import {
   calculateRuntime
-} from '../utils/common.js';
+} from '../utils/dates.js';
 
 const createFilmCardTemplate = (filmCard) => {
   const {
