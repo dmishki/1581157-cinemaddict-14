@@ -1,8 +1,4 @@
 import {
-  FilmGenres
-} from '../const.js';
-
-import {
   isDatesEqual,
   getFromDate,
   getDatesInRange
@@ -16,17 +12,16 @@ const calculateTotalDuration = (films) => {
   return films.reduce((acc, it) => acc + it.runtime, 0);
 };
 
-const calculateTotalFilmsStats = (films) => {
-  const filmsCountByGenres = FilmGenres.map((genre) => countFilmsByGenre(films, genre).length);
+const calculateTotalFilmsStats = (films, genres) => {
+  const filmsCountByGenres = genres.map((genre) => countFilmsByGenre(films, genre).length);
   const maxFilmsCount = Math.max(...filmsCountByGenres);
   const maxFilmsCountIndex = filmsCountByGenres.indexOf(maxFilmsCount);
 
   return {
-    genres: FilmGenres,
     filmsCountList: filmsCountByGenres,
     totalFilms: films.length,
     totalDuration: calculateTotalDuration(films),
-    topFilm: FilmGenres[maxFilmsCountIndex],
+    topFilm: genres[maxFilmsCountIndex],
   };
 };
 
@@ -34,7 +29,7 @@ const countFilmsInDateRange = (days, films) => {
   const daysAgo = getFromDate(days);
   const datesList = getDatesInRange(daysAgo);
   const filmsSet = new Set();
-  datesList.filter((date) => films.filter((film) => isDatesEqual(film.date, date)).forEach((item) => filmsSet.add(item)));
+  datesList.filter((date) => films.filter((film) => isDatesEqual(film.watchingDate, date)).forEach((item) => filmsSet.add(item)));
   return Array.from(filmsSet);
 };
 

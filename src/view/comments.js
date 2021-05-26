@@ -4,17 +4,9 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import SmartView from './smart.js';
 
 import {
-  nanoid
-} from 'nanoid';
-
-import {
   UserAction,
   UpdateType
 } from '../const.js';
-
-import {
-  getRandomDate
-} from '../utils/common.js';
 
 const createCommentsDateTemplate = (date) => {
   dayjs.extend(relativeTime);
@@ -28,6 +20,8 @@ const createCommentsTemplate = (data) => {
     comment,
     emoji,
     isEmoji,
+    isAdding,
+    isDeleting,
   } = data;
 
   const generateComments = () => {
@@ -40,7 +34,7 @@ const createCommentsTemplate = (data) => {
      <p class="film-details__comment-info">
        <span class="film-details__comment-author">${it.author}</span>
        <span class="film-details__comment-day">${createCommentsDateTemplate(it.date)}</span>
-       <button class="film-details__comment-delete">Delete</button>
+       <button class="film-details__comment-delete" ${isDeleting ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
      </p>
    </div>
    </li>`).join('')}`;
@@ -57,7 +51,7 @@ const createCommentsTemplate = (data) => {
       </div>
 
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${comment}</textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isAdding ? 'disabled' : ''}>${comment}</textarea>
       </label>
 
       <div class="film-details__emoji-list">
@@ -117,37 +111,41 @@ export default class CommentsBlock extends SmartView {
 
     this.getElement()
       .querySelector('.film-details__comment-input')
-      .addEventListener('keydown', (evt) => this._addCommentHandler(evt, this._data.id));
+      .addEventListener('keydown', (evt) => this._addCommentHandler(evt, this._data));
 
     this.getElement()
       .querySelectorAll('.film-details__comment-delete')
-      .forEach((it, index) => it.addEventListener('click', (evt) => this._deleteClickHandler(evt, index, this._data.id)));
+      .forEach((it, index) => it.addEventListener('click', (evt) => this._deleteClickHandler(evt, index, this._data)));
   }
 
-  _deleteClickHandler(evt, index, id) {
+  _deleteClickHandler(evt, index, film) {
     evt.preventDefault();
     this._changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.PATCH, {
         comment: this._comments[index],
-        id,
-      });
+        id: film.id,
+      }, film);
   }
 
-  _addCommentHandler(evt, id) {
+  _resetInputsValues() {
+    this._data.isEmoji = false;
+    this._data.comment = '';
+    this._data.emoji = '';
+  }
+
+  _addCommentHandler(evt, film) {
     if (evt.keyCode === 13 && evt.ctrlKey && evt.target.value !== '' && this._data.isEmoji) {
       this._changeData(
         UserAction.ADD_COMMENT,
         UpdateType.PATCH, {
           comment: {
-            id: nanoid(),
             emoji: this._data.emoji,
             comment: he.encode(this._data.comment),
-            author: 'Bruce Wilson',
-            date: getRandomDate(),
           },
-          id,
-        });
+        },
+        film);
+      this._resetInputsValues();
     }
   }
 

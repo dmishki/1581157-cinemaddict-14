@@ -29,7 +29,7 @@ import {
   calculateDurationMinutes
 } from '../utils/dates.js';
 
-const createStatsTemplate = (filmsList, currentFilterType) => {
+const createStatsTemplate = (filmsList, currentFilterType, genres) => {
   const {
     films,
     dateFrom,
@@ -38,7 +38,7 @@ const createStatsTemplate = (filmsList, currentFilterType) => {
 
   const watchedFilms = filter[FilterType.HISTORY](films);
   const filteredFilms = dateFrom > 0 ? countFilmsInDateRange(dateFrom, watchedFilms) : watchedFilms;
-  const calculatedInfo = calculateTotalFilmsStats(filteredFilms);
+  const calculatedInfo = calculateTotalFilmsStats(filteredFilms, genres);
 
   const {
     totalFilms,
@@ -119,7 +119,7 @@ export default class Stats extends SmartView {
   }
 
   getTemplate() {
-    return createStatsTemplate(this._data, this._currentFilterType);
+    return createStatsTemplate(this._data, this._currentFilterType, this._filmsModel.getGenres());
   }
 
   _renderChart() {
@@ -129,7 +129,7 @@ export default class Stats extends SmartView {
 
     const statisticCtx = this.getElement().querySelector('.statistic__chart');
 
-    this._chart = renderChart(statisticCtx, this._data);
+    this._chart = renderChart(statisticCtx, this._data, this._filmsModel.getGenres());
   }
 
   _handleModelEvent() {
@@ -200,7 +200,7 @@ export default class Stats extends SmartView {
   }
 }
 
-const renderChart = (statisticCtx, filmsList) => {
+const renderChart = (statisticCtx, filmsList, genres) => {
   const {
     films,
     dateFrom,
@@ -208,12 +208,7 @@ const renderChart = (statisticCtx, filmsList) => {
 
   const watchedFilms = filter[FilterType.HISTORY](films);
   const filteredFilms = dateFrom > 0 ? countFilmsInDateRange(dateFrom, watchedFilms) : watchedFilms;
-  const stats = calculateTotalFilmsStats(filteredFilms);
-
-  const {
-    genres,
-    filmsCountList,
-  } = stats;
+  const stats = calculateTotalFilmsStats(filteredFilms, genres);
 
   const BAR_HEIGHT = 50;
 
@@ -225,7 +220,7 @@ const renderChart = (statisticCtx, filmsList) => {
     data: {
       labels: genres,
       datasets: [{
-        data: filmsCountList,
+        data: stats.filmsCountList,
         backgroundColor: '#ffe800',
         hoverBackgroundColor: '#ffe800',
         anchor: 'start',

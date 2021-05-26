@@ -14,6 +14,7 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 export const FilterType = {
@@ -46,3 +47,8 @@ export const FilmGenres = [
   'Romance',
   'Thriller',
 ];
+
+export const State = {
+  ADDING: 'ADDING',
+  DELETING: 'DELETING',
+};

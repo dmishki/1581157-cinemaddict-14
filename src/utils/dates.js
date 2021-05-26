@@ -34,6 +34,10 @@ export const calculateDurationMinutes = (totalDuration, hours) => {
   return totalDuration - (hours * 60);
 };
 
+export const makeTodayDate = () => {
+  return dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+};
+
 export const calculateRuntime = (runtimeMinutes) => {
   const hours = Math.floor(runtimeMinutes / 60);
   const minutes = runtimeMinutes - (hours * 60);
