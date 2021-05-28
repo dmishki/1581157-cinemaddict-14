@@ -47,8 +47,3 @@ export const FilmGenres = [
   'Romance',
   'Thriller',
 ];
-
-export const State = {
-  ADDING: 'ADDING',
-  DELETING: 'DELETING',
-};

@@ -16,10 +16,11 @@ export default class Films extends Observer {
     return this._films;
   }
 
-  setComments(film, comments, updateType) {
-    this._film = film;
-    this._film.comments = comments;
-    this._notify(updateType, this._film);
+  setComments(filmId, comments, updateType) {
+    const film = this._films.find((it) => it.id === filmId);
+    film.internalComments = comments;
+    film.comments = comments.map((it) => it.id);
+    this._notify(updateType, film);
   }
 
   setGenres(genres) {
@@ -37,6 +38,8 @@ export default class Films extends Observer {
       throw new Error('Can\'t update unexisting film');
     }
 
+    const internalComments = this._films[index].internalComments;
+    update.internalComments = internalComments;
     this._films = [
       ...this._films.slice(0, index),
       update,
@@ -46,27 +49,20 @@ export default class Films extends Observer {
     this._notify(updateType, update);
   }
 
-  addComment(updateType, update) {
-    this._film.comments = [
-      ...this._film.comments,
-      update.comment,
-    ];
-
-    this._notify(updateType, this._film);
-  }
-
   deleteComment(updateType, update) {
     const filmIndex = this._films.findIndex((film) => film.id === update.id);
-    const commentIndex = this._films[filmIndex].comments.findIndex((comment) => comment.id === update.comment.id);
+    const commentIndex = this._films[filmIndex].internalComments.findIndex((comment) => comment.id === update.comment.id);
 
     if (commentIndex === -1) {
       throw new Error('Can\'t delete unexisting film');
     }
 
-    this._films[filmIndex].comments = [
-      ...this._films[filmIndex].comments.slice(0, commentIndex),
-      ...this._films[filmIndex].comments.slice(commentIndex + 1),
+    this._films[filmIndex].internalComments = [
+      ...this._films[filmIndex].internalComments.slice(0, commentIndex),
+      ...this._films[filmIndex].internalComments.slice(commentIndex + 1),
     ];
+
+    this._films[filmIndex].comments = this._films[filmIndex].internalComments.map((it) => it.id);
 
     this._notify(updateType, this._films[filmIndex]);
   }
@@ -151,6 +147,8 @@ export default class Films extends Observer {
     delete adaptedFilm.isWatchlist;
     delete adaptedFilm.isWatched;
     delete adaptedFilm.isFavorite;
+    delete adaptedFilm.watchingDate;
+    delete adaptedFilm.internalComments;
 
     return adaptedFilm;
   }

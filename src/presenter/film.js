@@ -22,6 +22,12 @@ const Mode = {
   OPENED: 'OPENED',
 };
 
+export const State = {
+  ADDING: 'ADDING',
+  DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
+};
+
 export default class Film {
   constructor(filmsContainer, changeData, changeMode, api, filmsModel) {
     this._filmsContainer = filmsContainer;
@@ -90,7 +96,7 @@ export default class Film {
   setComments(film) {
     return this._api.getComments(film)
       .then((comments) => {
-        this._filmsModel.setComments(film, comments, UpdateType.PATCH);
+        this._filmsModel.setComments(film.id, comments, UpdateType.PATCH);
         this._filmDetailsPopupComponent.updateElement();
       });
   }
@@ -145,6 +151,42 @@ export default class Film {
         this._film, {
           isFavorite: !this._film.isFavorite,
         }));
+  }
+
+  setViewState(state) {
+    const resetFormState = () => {
+      this._filmDetailsPopupComponent.updateData({
+        isAdding: false,
+        isDeleting: false,
+      });
+    };
+
+    switch (state) {
+      case State.ADDING:
+        this._filmDetailsPopupComponent.updateData({
+          isAdding: true,
+        });
+        break;
+      case State.DELETING:
+        this._filmDetailsPopupComponent.updateData({
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this._filmDetailsPopupComponent.shake(resetFormState);
+        break;
+    }
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._filmDetailsPopupComponent.updateData({
+        isAdding: false,
+        isDeleting: false,
+      });
+    };
+
+    this._taskEditComponent.shake(resetFormState);
   }
 
   _renderFilmDetailsPopup() {

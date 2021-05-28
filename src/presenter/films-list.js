@@ -27,7 +27,10 @@ import FilmsListView from '../view/films-list.js';
 import FilmsRatedView from '../view/films-rated.js';
 import FilmsCommentedView from '../view/films-commented.js';
 import ShowMoreButtonView from '../view/show-more-button.js';
-import FilmPresenter from './film.js';
+import FilmPresenter, {
+  State
+} from './film.js';
+
 
 const FILMS_RENDERING_STEP = 5;
 
@@ -194,9 +197,10 @@ export default class FilmsList {
       case UserAction.ADD_COMMENT:
         this._api.addComment(film.id, update)
           .then(() => this._api.getComments(film))
-          .then((response) => this._filmsModel.setComments(film, response, updateType));
+          .then((response) => this._filmsModel.setComments(film.id, response, updateType));
         break;
       case UserAction.DELETE_COMMENT:
+        this._filmPresenter[film.id].setViewState(State.DELETING);
         this._api.deleteComment(update)
           .then(() => {
             this._filmsModel.updateItem(updateType, film);

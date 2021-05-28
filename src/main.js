@@ -1,7 +1,7 @@
 import SiteMenuView from './view/menu.js';
 import UserProfileView from './view/user-profile.js';
 import FilmsQuanityView from './view/films-quantity.js';
-import FilmListPresenter from './presenter/filmsList.js';
+import FilmListPresenter from './presenter/films-list.js';
 import StatsView from './view/stats.js';
 import FilmsModel from './model/films.js';
 import FilterModel from './model/filter.js';
@@ -73,4 +73,5 @@ api.getFilms()
     render(siteHeader, userProfileView, RenderPosition.BEFOREEND);
     render(siteMain, statisticComponent, RenderPosition.BEFOREEND);
     render(footerStatistics, new FilmsQuanityView(filmsModel.getFilms()), RenderPosition.BEFOREEND);
-  });
+  })
+  .catch(() => filmsModel.setFilms([], UpdateType.INIT));
