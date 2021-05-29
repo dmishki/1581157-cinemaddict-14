@@ -149,10 +149,6 @@ export default class Stats extends SmartView {
       .forEach((item) => item.addEventListener('click', this._statsFilterClickHandler));
   }
 
-  setDefaultFilter() {
-    this._currentFilterType = StatsDate.ALL;
-  }
-
   setStatsFilterClickHandler(callback) {
     this._callback.menuClick = callback;
     this.getElement().addEventListener('click', this._statsFilterClickHandler);

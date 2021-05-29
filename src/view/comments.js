@@ -22,6 +22,7 @@ const createCommentsTemplate = (data) => {
     isEmoji,
     isAdding,
     isDeleting,
+    deletingCommentId,
   } = data;
 
   const generateComments = () => {
@@ -34,7 +35,7 @@ const createCommentsTemplate = (data) => {
      <p class="film-details__comment-info">
        <span class="film-details__comment-author">${it.author}</span>
        <span class="film-details__comment-day">${createCommentsDateTemplate(it.date)}</span>
-       <button class="film-details__comment-delete" ${isDeleting ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
+       <button class="film-details__comment-delete" ${isDeleting ? 'disabled' : ''}>${isDeleting && it.id === deletingCommentId ? 'Deleting...' : 'Delete'}</button>
      </p>
    </div>
    </li>`).join('')}`;
@@ -55,22 +56,22 @@ const createCommentsTemplate = (data) => {
       </label>
 
       <div class="film-details__emoji-list">
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${emoji === 'smile' ? 'checked' : ''}>
+        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile"  ${isAdding ? 'disabled' : ''}${emoji === 'smile' ? 'checked' : ''}>
         <label class="film-details__emoji-label" for="emoji-smile">
           <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
         </label>
 
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${emoji === 'sleeping' ? 'checked' : ''}>
+        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${isAdding ? 'disabled' : ''} ${emoji === 'sleeping' ? 'checked' : ''}>
         <label class="film-details__emoji-label" for="emoji-sleeping">
           <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
         </label>
 
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${emoji === 'puke' ? 'checked' : ''}>
+        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${isAdding ? 'disabled' : ''} ${emoji === 'puke' ? 'checked' : ''}>
         <label class="film-details__emoji-label" for="emoji-puke">
           <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
         </label>
 
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${emoji === 'angry' ? 'checked' : ''}>
+        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${isAdding ? 'disabled' : ''} ${emoji === 'angry' ? 'checked' : ''}>
         <label class="film-details__emoji-label" for="emoji-angry">
           <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
         </label>

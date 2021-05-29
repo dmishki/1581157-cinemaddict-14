@@ -153,7 +153,7 @@ export default class Film {
         }));
   }
 
-  setViewState(state) {
+  setViewState(state, comment) {
     const resetFormState = () => {
       this._filmDetailsPopupComponent.updateData({
         isAdding: false,
@@ -170,23 +170,13 @@ export default class Film {
       case State.DELETING:
         this._filmDetailsPopupComponent.updateData({
           isDeleting: true,
+          deletingCommentId: comment.id,
         });
         break;
       case State.ABORTING:
         this._filmDetailsPopupComponent.shake(resetFormState);
         break;
     }
-  }
-
-  setAborting() {
-    const resetFormState = () => {
-      this._filmDetailsPopupComponent.updateData({
-        isAdding: false,
-        isDeleting: false,
-      });
-    };
-
-    this._taskEditComponent.shake(resetFormState);
   }
 
   _renderFilmDetailsPopup() {
