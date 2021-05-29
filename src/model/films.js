@@ -102,28 +102,28 @@ export default class Films extends Observer {
   static adaptToServer(film) {
     const adaptedFilm = Object.assign({},
       film, {
-        film_info: {
+        'film_info': {
           title: film.name,
-          alternative_title: film.originalName,
+          'alternative_title': film.originalName,
           poster: film.poster,
-          total_rating: film.rating,
+          'total_rating': film.rating,
           runtime: film.runtime,
           genre: film.genres,
           description: film.fullDescription,
           director: film.producer,
           writers: film.writers,
           actors: film.actors,
-          age_rating: film.ageRating,
+          'age_rating': film.ageRating,
           release: {
             date: film.date,
-            release_country: film.country,
+            'release_country': film.country,
           },
         },
-        user_details: {
+        'user_details': {
           watchlist: film.isWatchlist,
-          already_watched: film.isWatched,
+          'already_watched': film.isWatched,
           favorite: film.isFavorite,
-          watching_date: film.watchingDate,
+          'watching_date': film.watchingDate,
         },
       });
 
