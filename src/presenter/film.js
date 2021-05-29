@@ -123,9 +123,20 @@ export default class Film {
   }
 
   _handleWatchListClick() {
+    if (this._mode === Mode.OPENED) {
+      this._changeData(
+        UserAction.UPDATE_ITEM,
+        UpdateType.PATCH,
+        Object.assign({},
+          this._film, {
+            isWatchlist: !this._film.isWatchlist,
+          }));
+      return;
+    }
+
     this._changeData(
       UserAction.UPDATE_ITEM,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       Object.assign({},
         this._film, {
           isWatchlist: !this._film.isWatchlist,
@@ -133,9 +144,21 @@ export default class Film {
   }
 
   _handleWatchedClick() {
+    if (this._mode === Mode.OPENED) {
+      this._changeData(
+        UserAction.UPDATE_ITEM,
+        UpdateType.PATCH,
+        Object.assign({},
+          this._film, {
+            isWatched: !this._film.isWatched,
+            watchingDate: makeTodayDate(),
+          }));
+      return;
+    }
+
     this._changeData(
       UserAction.UPDATE_ITEM,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       Object.assign({},
         this._film, {
           isWatched: !this._film.isWatched,
@@ -144,9 +167,20 @@ export default class Film {
   }
 
   _handleFavoriteClick() {
+    if (this._mode === Mode.OPENED) {
+      this._changeData(
+        UserAction.UPDATE_ITEM,
+        UpdateType.PATCH,
+        Object.assign({},
+          this._film, {
+            isFavorite: !this._film.isFavorite,
+          }));
+      return;
+    }
+
     this._changeData(
       UserAction.UPDATE_ITEM,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       Object.assign({},
         this._film, {
           isFavorite: !this._film.isFavorite,
