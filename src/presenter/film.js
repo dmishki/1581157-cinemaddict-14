@@ -29,10 +29,11 @@ export const State = {
 };
 
 export default class Film {
-  constructor(filmsContainer, changeData, changeMode, api, filmsModel) {
+  constructor(filmsContainer, changeData, changeMode, modelEvent, api, filmsModel) {
     this._filmsContainer = filmsContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._modelEvent = modelEvent;
     this._api = api;
     this._filmsModel = filmsModel;
 
@@ -113,6 +114,7 @@ export default class Film {
     siteBody.classList.remove('hide-overflow');
     this._mode = Mode.DEFAULT;
     document.removeEventListener('keydown', this._escKeyDownHandler);
+    this._modelEvent(UpdateType.MINOR);
   }
 
   _escKeyDownHandler(evt) {
@@ -123,9 +125,20 @@ export default class Film {
   }
 
   _handleWatchListClick() {
+    if (this._mode === Mode.OPENED) {
+      this._changeData(
+        UserAction.UPDATE_ITEM,
+        UpdateType.PATCH,
+        Object.assign({},
+          this._film, {
+            isWatchlist: !this._film.isWatchlist,
+          }));
+      return;
+    }
+
     this._changeData(
       UserAction.UPDATE_ITEM,
-      UpdateType.PATCH,
+      UpdateType.MAJOR,
       Object.assign({},
         this._film, {
           isWatchlist: !this._film.isWatchlist,
@@ -133,9 +146,21 @@ export default class Film {
   }
 
   _handleWatchedClick() {
+    if (this._mode === Mode.OPENED) {
+      this._changeData(
+        UserAction.UPDATE_ITEM,
+        UpdateType.PATCH,
+        Object.assign({},
+          this._film, {
+            isWatched: !this._film.isWatched,
+            watchingDate: makeTodayDate(),
+          }));
+      return;
+    }
+
     this._changeData(
       UserAction.UPDATE_ITEM,
-      UpdateType.PATCH,
+      UpdateType.MAJOR,
       Object.assign({},
         this._film, {
           isWatched: !this._film.isWatched,
@@ -144,9 +169,20 @@ export default class Film {
   }
 
   _handleFavoriteClick() {
+    if (this._mode === Mode.OPENED) {
+      this._changeData(
+        UserAction.UPDATE_ITEM,
+        UpdateType.PATCH,
+        Object.assign({},
+          this._film, {
+            isFavorite: !this._film.isFavorite,
+          }));
+      return;
+    }
+
     this._changeData(
       UserAction.UPDATE_ITEM,
-      UpdateType.PATCH,
+      UpdateType.MAJOR,
       Object.assign({},
         this._film, {
           isFavorite: !this._film.isFavorite,

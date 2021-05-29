@@ -18,7 +18,7 @@ import {
   RenderPosition
 } from './utils/render.js';
 
-const AUTHORIZATION = 'Basic uv3FY7idF6I498SJoEPxY4SF3Q9F2250112';
+const AUTHORIZATION = 'Basic uv3FY7idF6I498SJoEPxY4SF3Q9F2212212';
 const END_POINT = 'https://14.ecmascript.pages.academy/cinemaddict';
 
 const siteHeader = document.querySelector('.header');
@@ -45,12 +45,14 @@ const statisticComponent = new StatsView(filmsModel);
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.FILTERS:
+      statisticComponent.resetToDefault();
       filtersPresenter.init();
       statisticComponent.hide();
       siteMenuComponent.hide();
       filmListPresenter.showFilms();
       break;
     case MenuItem.STATISTICS:
+      statisticComponent.resetToDefault();
       statisticComponent.updateElement();
       filmListPresenter.hideFilms();
       filtersPresenter.removeActiveClass();

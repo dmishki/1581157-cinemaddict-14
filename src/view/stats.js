@@ -124,7 +124,7 @@ export default class Stats extends SmartView {
 
   _renderChart() {
     if (this._chart !== null) {
-      this._chart = null;
+      this._chart.destroy();
     }
 
     const statisticCtx = this.getElement().querySelector('.statistic__chart');
@@ -158,6 +158,11 @@ export default class Stats extends SmartView {
     evt.preventDefault();
     this._currentFilterType = evt.target.dataset.type;
     this.handleStatsFilterClick(this._currentFilterType);
+  }
+
+  resetToDefault() {
+    this._currentFilterType = StatsDate.ALL;
+    this._renderChart();
   }
 
   handleStatsFilterClick(statsDate) {
