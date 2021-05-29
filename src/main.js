@@ -18,7 +18,7 @@ import {
   RenderPosition
 } from './utils/render.js';
 
-const AUTHORIZATION = 'Basic uv3FY7idF6I498SJoEPxY4SF3Q9F2223212';
+const AUTHORIZATION = 'Basic uv3FY7idF6I498SJoEPxY4SF3Q9F2212212';
 const END_POINT = 'https://14.ecmascript.pages.academy/cinemaddict';
 
 const siteHeader = document.querySelector('.header');

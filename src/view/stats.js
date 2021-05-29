@@ -124,7 +124,7 @@ export default class Stats extends SmartView {
 
   _renderChart() {
     if (this._chart !== null) {
-      this._chart = null;
+      this._chart.destroy();
     }
 
     const statisticCtx = this.getElement().querySelector('.statistic__chart');
