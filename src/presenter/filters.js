@@ -59,6 +59,13 @@ export default class Filters {
     this._filterModel.setFilter(UpdateType.MAJOR, filterType);
   }
 
+  removeActiveClass() {
+    const activeElement = this._filterComponent.getElement().querySelector('.main-navigation__item--active');
+    if (activeElement) {
+      activeElement.classList.remove('main-navigation__item--active');
+    }
+  }
+
   _getFilters() {
     const films = this._filmsModel.getFilms();
 

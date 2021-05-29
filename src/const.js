@@ -14,6 +14,7 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 export const FilterType = {
@@ -22,3 +23,27 @@ export const FilterType = {
   HISTORY: 'history',
   FAVORITES: 'favorites',
 };
+
+export const MenuItem = {
+  FILTERS: 'FILTERS',
+  STATISTICS: 'STATISTICS',
+};
+
+export const StatsDate = {
+  ALL: 'ALL',
+  TODAY: 'TODAY',
+  WEEK: 'WEEK',
+  MONTH: 'MONTH',
+  YEAR: 'YEAR',
+};
+
+export const FilmGenres = [
+  'Action',
+  'Comedy',
+  'Drama',
+  'Fantasy',
+  'Horror',
+  'Mystery',
+  'Romance',
+  'Thriller',
+];

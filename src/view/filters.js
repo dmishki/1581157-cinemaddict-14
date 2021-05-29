@@ -1,8 +1,12 @@
+import AbstractView from './abstract.js';
+
 import {
   FilterType
 } from '../const.js';
 
-import AbstractView from './abstract.js';
+import {
+  MenuItem
+} from '../const.js';
 
 const createFilterItemTemplate = (filter, currentFilterType) => {
   const {
@@ -11,7 +15,7 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
     count,
   } = filter;
 
-  return `<a href="#${name.toLowerCase()}" data-filter='${type}' class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}">${name}${type === FilterType.ALL ? '' : ` <span class="main-navigation__item-count">${count}</span></a>`}`;
+  return `<a href="#${name.toLowerCase()}" data-type='${MenuItem.FILTERS}' data-filter='${type}' class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}">${name}${type === FilterType.ALL ? '' : ` <span class="main-navigation__item-count">${count}</span></a>`}`;
 };
 
 const createFiltersTemplate = (filters, currentFilterType) => {

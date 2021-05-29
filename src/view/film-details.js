@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import SmartView from './smart.js';
 import {
   calculateRuntime
-} from '../utils/common.js';
+} from '../utils/dates.js';
 import {
   render,
   RenderPosition
@@ -216,6 +216,8 @@ export default class FilmDetailsPopup extends SmartView {
         isWatchlist: film.isWatchlist,
         isWatched: film.isWatched,
         isFavorite: film.isFavorite,
+        isAdding: film.isAdding,
+        isDeleting: film.isDeleting,
       });
   }
 

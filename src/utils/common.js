@@ -1,5 +1,13 @@
 import dayjs from 'dayjs';
 
+import {
+  FilterType
+} from '../const.js';
+
+import {
+  filter
+} from './filter.js';
+
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -31,10 +39,19 @@ const compareRatings = (filmA, filmB) => {
   return filmB.rating - filmA.rating;
 };
 
-const calculateRuntime = (runtimeMinutes) => {
-  const hours = Math.floor(runtimeMinutes / 60);
-  const minutes = runtimeMinutes - (hours * 60);
-  return hours + 'h ' + minutes + 'm';
+const calculateProfileRank = (films) => {
+  const watchedFilmsCount = filter[FilterType.HISTORY](films).length;
+
+  switch (true) {
+    case watchedFilmsCount === 0:
+      return '';
+    case watchedFilmsCount < 11:
+      return 'Novice';
+    case watchedFilmsCount < 21:
+      return 'Fan';
+    case watchedFilmsCount >= 21:
+      return 'Movie buff';
+  }
 };
 
 export {
@@ -43,5 +60,5 @@ export {
   getRandomDate,
   compareDates,
   compareRatings,
-  calculateRuntime
+  calculateProfileRank
 };

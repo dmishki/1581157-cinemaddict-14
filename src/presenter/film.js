@@ -8,6 +8,9 @@ import {
   UserAction,
   UpdateType
 } from '../const.js';
+import {
+  makeTodayDate
+} from '../utils/dates.js';
 
 import FilmCardView from '../view/film-card.js';
 import FilmDetailsPopupView from '../view/film-details.js';
@@ -19,11 +22,19 @@ const Mode = {
   OPENED: 'OPENED',
 };
 
+export const State = {
+  ADDING: 'ADDING',
+  DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
+};
+
 export default class Film {
-  constructor(filmsContainer, changeData, changeMode) {
+  constructor(filmsContainer, changeData, changeMode, api, filmsModel) {
     this._filmsContainer = filmsContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._api = api;
+    this._filmsModel = filmsModel;
 
     this._filmCardComponent = null;
     this._filmDetailsPopupComponent = null;
@@ -44,7 +55,7 @@ export default class Film {
     const prevfilmDetailsPopupComponent = this._filmDetailsPopupComponent;
 
     this._filmCardComponent = new FilmCardView(film);
-    this._filmDetailsPopupComponent = new FilmDetailsPopupView(film, this._changeData);
+    this._filmDetailsPopupComponent = new FilmDetailsPopupView(this._film, this._changeData);
 
     this._filmCardComponent.setWatchListClickHandler(this._handleWatchListClick);
     this._filmCardComponent.setWatchedClickHandler(this._handleWatchedClick);
@@ -79,6 +90,15 @@ export default class Film {
 
     remove(prevfilmCardComponent);
     remove(prevfilmDetailsPopupComponent);
+  }
+
+
+  setComments(film) {
+    return this._api.getComments(film)
+      .then((comments) => {
+        this._filmsModel.setComments(film.id, comments, UpdateType.PATCH);
+        this._filmDetailsPopupComponent.updateElement();
+      });
   }
 
   resetView() {
@@ -119,6 +139,7 @@ export default class Film {
       Object.assign({},
         this._film, {
           isWatched: !this._film.isWatched,
+          watchingDate: makeTodayDate(),
         }));
   }
 
@@ -132,12 +153,41 @@ export default class Film {
         }));
   }
 
+  setViewState(state, comment) {
+    const resetFormState = () => {
+      this._filmDetailsPopupComponent.updateData({
+        isAdding: false,
+        isDeleting: false,
+      });
+    };
+
+    switch (state) {
+      case State.ADDING:
+        this._filmDetailsPopupComponent.updateData({
+          isAdding: true,
+        });
+        break;
+      case State.DELETING:
+        this._filmDetailsPopupComponent.updateData({
+          isDeleting: true,
+          deletingCommentId: comment.id,
+        });
+        break;
+      case State.ABORTING:
+        this._filmDetailsPopupComponent.shake(resetFormState);
+        break;
+    }
+  }
+
   _renderFilmDetailsPopup() {
-    render(siteBody, this._filmDetailsPopupComponent, RenderPosition.BEFOREEND);
-    siteBody.classList.add('hide-overflow');
-    document.addEventListener('keydown', this._escKeyDownHandler);
-    this._changeMode();
-    this._mode = Mode.OPENED;
+    this.setComments(this._film)
+      .then(() => {
+        render(siteBody, this._filmDetailsPopupComponent, RenderPosition.BEFOREEND);
+        siteBody.classList.add('hide-overflow');
+        document.addEventListener('keydown', this._escKeyDownHandler);
+        this._changeMode();
+        this._mode = Mode.OPENED;
+      });
   }
 
   destroy() {
