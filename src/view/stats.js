@@ -160,6 +160,11 @@ export default class Stats extends SmartView {
     this.handleStatsFilterClick(this._currentFilterType);
   }
 
+  resetToDefault() {
+    this._currentFilterType = StatsDate.ALL;
+    this._renderChart();
+  }
+
   handleStatsFilterClick(statsDate) {
     switch (statsDate) {
       case StatsDate.ALL:

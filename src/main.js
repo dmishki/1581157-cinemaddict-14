@@ -51,6 +51,7 @@ const handleSiteMenuClick = (menuItem) => {
       filmListPresenter.showFilms();
       break;
     case MenuItem.STATISTICS:
+      statisticComponent.resetToDefault();
       statisticComponent.updateElement();
       filmListPresenter.hideFilms();
       filtersPresenter.removeActiveClass();

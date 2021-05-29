@@ -24,8 +24,6 @@ import FilmsSectionView from '../view/films-section.js';
 import NoFilmsView from '../view/no-films.js';
 import LoadingView from '../view/loading.js';
 import FilmsListView from '../view/films-list.js';
-import FilmsRatedView from '../view/films-rated.js';
-import FilmsCommentedView from '../view/films-commented.js';
 import ShowMoreButtonView from '../view/show-more-button.js';
 import FilmPresenter, {
   State
@@ -42,14 +40,10 @@ export default class FilmsList {
     this._api = api;
     this._renderedFilmsCount = FILMS_RENDERING_STEP;
     this._filmsSectionComponent = new FilmsSectionView();
-    this._filmsRatedComponent = new FilmsRatedView();
-    this._filmsCommentedComponent = new FilmsCommentedView();
     this._noFilmsComponent = new NoFilmsView();
     this._loadingComponent = new LoadingView();
     this._filmsListComponent = new FilmsListView();
     this._filmsContainerComponent = this._filmsListComponent.getElement().querySelector('.films-list__container');
-    this._filmsRatedContainerComponent = this._filmsRatedComponent.getElement().querySelector('.films-list__container');
-    this._filmsCommentedContainerComponent = this._filmsCommentedComponent.getElement().querySelector('.films-list__container');
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -125,28 +119,10 @@ export default class FilmsList {
     const filmCount = this._getFilms().length;
     const films = this._getFilms().slice(0, Math.min(filmCount, FILMS_RENDERING_STEP));
     this._renderFilms(films, this._filmsContainerComponent);
-    this._renderRatedFilms();
-    this._renderCommentedFilms();
 
     if (filmCount > this._renderedFilmsCount) {
       this._renderShowMoreButton();
     }
-  }
-
-  _renderRatedFilms() {
-    const filmCount = this._getFilms().length;
-    const films = this._getFilms().slice(filmCount - 4, filmCount - 2);
-
-    render(this._filmsSectionComponent, this._filmsRatedComponent, RenderPosition.BEFOREEND);
-    this._renderFilms(films, this._filmsRatedContainerComponent);
-  }
-
-  _renderCommentedFilms() {
-    const filmCount = this._getFilms().length;
-    const films = this._getFilms().slice(filmCount - 2, filmCount);
-
-    render(this._filmsSectionComponent, this._filmsCommentedComponent, RenderPosition.BEFOREEND);
-    this._renderFilms(films, this._filmsCommentedContainerComponent);
   }
 
   _renderNoFilms() {
