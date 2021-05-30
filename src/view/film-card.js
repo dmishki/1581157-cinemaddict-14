@@ -3,6 +3,9 @@ import AbstractView from './abstract.js';
 import {
   calculateRuntime
 } from '../utils/dates.js';
+import {
+  formatDescription
+} from '../utils/common.js';
 
 const createFilmCardTemplate = (filmCard) => {
   const {
@@ -28,7 +31,7 @@ const createFilmCardTemplate = (filmCard) => {
     <span class="film-card__genre">${genres[0]}</span>
   </p>
   <img src="${poster}" alt="" class="film-card__poster">
-  <p class="film-card__description">${description}</p>
+  <p class="film-card__description">${formatDescription(description)}</p>
   <a class="film-card__comments">${comments.length} comments</a>
   <div class="film-card__controls">
     <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchlist ? 'film-card__controls-item--active' : ''}" type="button">Add to watchlist</button>
@@ -52,26 +55,6 @@ export default class FilmCard extends AbstractView {
     return createFilmCardTemplate(this._filmCard);
   }
 
-  _watchListClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.watchListClick();
-  }
-
-  _watchedClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.watchedClick();
-  }
-
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.favoriteClick();
-  }
-
-  _renderFilmPopupHandler(evt) {
-    evt.preventDefault();
-    this._callback.renderFilmPopup();
-  }
-
   renderFilmPopupHandler(callback) {
     this._callback.renderFilmPopup = callback;
     this.getElement().querySelector('.film-card__comments').addEventListener('click', this._renderFilmPopupHandler);
@@ -92,5 +75,25 @@ export default class FilmCard extends AbstractView {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector('.film-card__controls-item--favorite').addEventListener('click', this._favoriteClickHandler);
+  }
+
+  _watchListClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchListClick();
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  _renderFilmPopupHandler(evt) {
+    evt.preventDefault();
+    this._callback.renderFilmPopup();
   }
 }

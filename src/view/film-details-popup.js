@@ -7,7 +7,7 @@ import {
   render,
   RenderPosition
 } from '../utils/render.js';
-import CommentsBlockView from './comments.js';
+import CommentsBlockView from './comments-block.js';
 
 const createFilmDetailsPopupTemplate = (data) => {
   const {
@@ -32,7 +32,7 @@ const createFilmDetailsPopupTemplate = (data) => {
   const generateGenres = () => {
     return `<td class="film-details__term">${genres.length > 1 ? 'Genres' : 'Genre'}</td>
     <td class="film-details__cell">
-    ${genres.map((it) => `<span class="film-details__genre">${it}</span>`).join('')}
+    ${genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join('')}
     </td>`;
   };
 
@@ -46,7 +46,7 @@ const createFilmDetailsPopupTemplate = (data) => {
         <div class="film-details__poster">
           <img class="film-details__poster-img" src="${poster}" alt="">
 
-          <p class="film-details__age">${ageRating}</p>
+          <p class="film-details__age">${ageRating}+</p>
         </div>
 
         <div class="film-details__info">
@@ -72,7 +72,7 @@ const createFilmDetailsPopupTemplate = (data) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Actors</td>
-              <td class="film-details__cell">${actors}</td>
+              <td class="film-details__cell">${actors.join(', ')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
@@ -132,6 +132,61 @@ export default class FilmDetailsPopup extends SmartView {
     return createFilmDetailsPopupTemplate(this._data);
   }
 
+  renderCommentsBlock(data, changeData) {
+    const commentsContainer = this.getElement().querySelector('.film-details__bottom-container');
+    const commentsBlock = new CommentsBlockView(data, changeData);
+    render(commentsContainer, commentsBlock, RenderPosition.BEFOREEND);
+  }
+
+  reset(film) {
+    this.updateData(
+      FilmDetailsPopup.parseFilmCardToData(film));
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+  }
+
+  setWatchListClickHandler(callback) {
+    this._callback.watchListClick = callback;
+    this.getElement().querySelector('.film-details__control-label--watchlist').addEventListener('click', this._watchListClickHandler);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector('.film-details__control-label--watched').addEventListener('click', this._watchedClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector('.film-details__control-label--favorite').addEventListener('click', this._favoriteClickHandler);
+  }
+
+  closePopupHandler(callback) {
+    this._callback.closePopup = callback;
+    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._closePopupHandler);
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector('.film-details__control-label--watchlist')
+      .addEventListener('click', this._watchListClickHandler);
+
+    this.getElement()
+      .querySelector('.film-details__control-label--watched')
+      .addEventListener('click', this._watchedClickHandler);
+
+    this.getElement()
+      .querySelector('.film-details__control-label--favorite')
+      .addEventListener('click', this._favoriteClickHandler);
+
+    this.getElement()
+      .querySelector('.film-details__close-btn')
+      .addEventListener('click', this._closePopupHandler);
+
+    this.renderCommentsBlock(this._data, this._changeData);
+  }
+
   _watchListClickHandler(evt) {
     evt.preventDefault();
     this.updateData({
@@ -156,58 +211,9 @@ export default class FilmDetailsPopup extends SmartView {
     this._callback.favoriteClick();
   }
 
-  setWatchListClickHandler(callback) {
-    this._callback.watchListClick = callback;
-    this.getElement().querySelector('.film-details__control-label--watchlist').addEventListener('click', this._watchListClickHandler);
-  }
-
-  setWatchedClickHandler(callback) {
-    this._callback.watchedClick = callback;
-    this.getElement().querySelector('.film-details__control-label--watched').addEventListener('click', this._watchedClickHandler);
-  }
-
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
-    this.getElement().querySelector('.film-details__control-label--favorite').addEventListener('click', this._favoriteClickHandler);
-  }
-
   _closePopupHandler(evt) {
     evt.preventDefault();
     this._callback.closePopup();
-  }
-
-  closePopupHandler(callback) {
-    this._callback.closePopup = callback;
-    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._closePopupHandler);
-  }
-
-  restoreHandlers() {
-    this._setInnerHandlers();
-  }
-
-  _setInnerHandlers() {
-    this.getElement()
-      .querySelector('.film-details__control-label--watchlist')
-      .addEventListener('click', this._watchListClickHandler);
-
-    this.getElement()
-      .querySelector('.film-details__control-label--watched')
-      .addEventListener('click', this._watchedClickHandler);
-
-    this.getElement()
-      .querySelector('.film-details__control-label--favorite')
-      .addEventListener('click', this._favoriteClickHandler);
-
-    this.getElement()
-      .querySelector('.film-details__close-btn')
-      .addEventListener('click', this._closePopupHandler);
-
-    this.renderCommentsBlock(this._data, this._changeData);
-  }
-
-  reset(film) {
-    this.updateData(
-      FilmDetailsPopup.parseFilmCardToData(film));
   }
 
   static parseFilmCardToData(film) {
@@ -225,11 +231,5 @@ export default class FilmDetailsPopup extends SmartView {
     data = Object.assign({}, data);
 
     return data;
-  }
-
-  renderCommentsBlock(data, changeData) {
-    const commentsContainer = this.getElement().querySelector('.film-details__bottom-container');
-    const commentsBlock = new CommentsBlockView(data, changeData);
-    render(commentsContainer, commentsBlock, RenderPosition.BEFOREEND);
   }
 }

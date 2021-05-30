@@ -29,6 +29,8 @@ import {
   calculateDurationMinutes
 } from '../utils/dates.js';
 
+const BAR_HEIGHT = 50;
+
 const createStatsTemplate = (filmsList, currentFilterType, genres) => {
   const {
     films,
@@ -97,110 +99,6 @@ const createStatsTemplate = (filmsList, currentFilterType, genres) => {
 </section>`;
 };
 
-export default class Stats extends SmartView {
-  constructor(filmsModel) {
-    super();
-
-    this._filmsModel = filmsModel;
-
-    this._data = {
-      films: this._filmsModel.getFilms(),
-      dateFrom: 0,
-      isStatsHidden: true,
-    };
-
-    this._statsFilterClickHandler = this._statsFilterClickHandler.bind(this);
-    this._currentFilterType = StatsDate.ALL;
-
-    this._chart = null;
-    this._handleModelEvent = this._handleModelEvent.bind(this);
-
-    this.restoreHandlers();
-  }
-
-  getTemplate() {
-    return createStatsTemplate(this._data, this._currentFilterType, this._filmsModel.getGenres());
-  }
-
-  _renderChart() {
-    if (this._chart !== null) {
-      this._chart.destroy();
-    }
-
-    const statisticCtx = this.getElement().querySelector('.statistic__chart');
-
-    this._chart = renderChart(statisticCtx, this._data, this._filmsModel.getGenres());
-  }
-
-  _handleModelEvent() {
-    this._filmsModel.removeObserver(this._handleModelEvent);
-    this._data = {
-      films: this._filmsModel.getFilms(),
-      dateFrom: 0,
-      isStatsHidden: true,
-    };
-    this.updateElement();
-  }
-
-  restoreHandlers() {
-    this._filmsModel.addObserver(this._handleModelEvent);
-    this._renderChart();
-    this.getElement().querySelectorAll('.statistic__filters-label')
-      .forEach((item) => item.addEventListener('click', this._statsFilterClickHandler));
-  }
-
-  setStatsFilterClickHandler(callback) {
-    this._callback.menuClick = callback;
-    this.getElement().addEventListener('click', this._statsFilterClickHandler);
-  }
-
-  _statsFilterClickHandler(evt) {
-    evt.preventDefault();
-    this._currentFilterType = evt.target.dataset.type;
-    this.handleStatsFilterClick(this._currentFilterType);
-  }
-
-  resetToDefault() {
-    this._currentFilterType = StatsDate.ALL;
-    this._renderChart();
-  }
-
-  handleStatsFilterClick(statsDate) {
-    switch (statsDate) {
-      case StatsDate.ALL:
-        this.updateData({
-          dateFrom: 0,
-          isStatsHidden: false,
-        });
-        break;
-      case StatsDate.TODAY:
-        this.updateData({
-          dateFrom: 1,
-          isStatsHidden: false,
-        });
-        break;
-      case StatsDate.WEEK:
-        this.updateData({
-          dateFrom: 7,
-          isStatsHidden: false,
-        });
-        break;
-      case StatsDate.MONTH:
-        this.updateData({
-          dateFrom: 30,
-          isStatsHidden: false,
-        });
-        break;
-      case StatsDate.YEAR:
-        this.updateData({
-          dateFrom: 365,
-          isStatsHidden: false,
-        });
-        break;
-    }
-  }
-}
-
 const renderChart = (statisticCtx, filmsList, genres) => {
   const {
     films,
@@ -210,8 +108,6 @@ const renderChart = (statisticCtx, filmsList, genres) => {
   const watchedFilms = filter[FilterType.HISTORY](films);
   const filteredFilms = dateFrom > 0 ? countFilmsInDateRange(dateFrom, watchedFilms) : watchedFilms;
   const stats = calculateTotalFilmsStats(filteredFilms, genres);
-
-  const BAR_HEIGHT = 50;
 
   statisticCtx.height = BAR_HEIGHT * genres.length;
 
@@ -272,3 +168,108 @@ const renderChart = (statisticCtx, filmsList, genres) => {
     },
   });
 };
+
+export default class Stats extends SmartView {
+  constructor(filmsModel) {
+    super();
+
+    this._filmsModel = filmsModel;
+
+    this._data = {
+      films: this._filmsModel.getFilms(),
+      dateFrom: 0,
+      isStatsHidden: true,
+    };
+
+    this._statsFilterClickHandler = this._statsFilterClickHandler.bind(this);
+    this._currentFilterType = StatsDate.ALL;
+
+    this._chart = null;
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+
+    this.restoreHandlers();
+  }
+
+  getTemplate() {
+    return createStatsTemplate(this._data, this._currentFilterType, this._filmsModel.getGenres());
+  }
+
+  resetToDefault() {
+    this._currentFilterType = StatsDate.ALL;
+    this.handleStatsFilterClick(StatsDate.ALL);
+    this._renderChart();
+  }
+
+  restoreHandlers() {
+    this._filmsModel.addObserver(this._handleModelEvent);
+    this._renderChart();
+    this.getElement().querySelectorAll('.statistic__filters-label')
+      .forEach((item) => item.addEventListener('click', this._statsFilterClickHandler));
+  }
+
+  handleStatsFilterClick(statsDate) {
+    switch (statsDate) {
+      case StatsDate.ALL:
+        this.updateData({
+          dateFrom: 0,
+          isStatsHidden: false,
+        });
+        break;
+      case StatsDate.TODAY:
+        this.updateData({
+          dateFrom: 1,
+          isStatsHidden: false,
+        });
+        break;
+      case StatsDate.WEEK:
+        this.updateData({
+          dateFrom: 7,
+          isStatsHidden: false,
+        });
+        break;
+      case StatsDate.MONTH:
+        this.updateData({
+          dateFrom: 30,
+          isStatsHidden: false,
+        });
+        break;
+      case StatsDate.YEAR:
+        this.updateData({
+          dateFrom: 365,
+          isStatsHidden: false,
+        });
+        break;
+    }
+  }
+
+  setStatsFilterClickHandler(callback) {
+    this._callback.menuClick = callback;
+    this.getElement().addEventListener('click', this._statsFilterClickHandler);
+  }
+
+  _renderChart() {
+    if (this._chart !== null) {
+      this._chart.destroy();
+    }
+
+    const statisticCtx = this.getElement().querySelector('.statistic__chart');
+
+    this._chart = renderChart(statisticCtx, this._data, this._filmsModel.getGenres());
+  }
+
+  _handleModelEvent() {
+    this._filmsModel.removeObserver(this._handleModelEvent);
+    this._data = {
+      films: this._filmsModel.getFilms(),
+      dateFrom: 0,
+      isStatsHidden: true,
+    };
+    this.updateElement();
+  }
+
+  _statsFilterClickHandler(evt) {
+    evt.preventDefault();
+    this._currentFilterType = evt.target.dataset.type;
+    this.handleStatsFilterClick(this._currentFilterType);
+  }
+}

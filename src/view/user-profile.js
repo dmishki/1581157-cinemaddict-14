@@ -24,12 +24,12 @@ export default class UserProfile extends Smart {
     return createUserProfileTemplate(this._filmsModel.getFilms());
   }
 
+  restoreHandlers() {
+    this._filmsModel.addObserver(this._handleModelEvent);
+  }
+
   _handleModelEvent() {
     this._filmsModel.removeObserver(this._handleModelEvent);
     this.updateElement();
-  }
-
-  restoreHandlers() {
-    this._filmsModel.addObserver(this._handleModelEvent);
   }
 }

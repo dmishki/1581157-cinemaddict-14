@@ -1,6 +1,6 @@
-import SiteMenuView from './view/menu.js';
+import SiteMenuView from './view/site-menu.js';
 import UserProfileView from './view/user-profile.js';
-import FilmsQuanityView from './view/films-quantity.js';
+import FilmsQuantityView from './view/films-quantity.js';
 import FilmListPresenter from './presenter/films-list.js';
 import StatsView from './view/stats.js';
 import FilmsModel from './model/films.js';
@@ -70,10 +70,10 @@ api.getFilms()
   })
   .then(() => {
     const filmGenres = new Set();
-    filmsModel.getFilms().map((film) => film.genres.forEach((genre) => filmGenres.add(genre)));
+    filmsModel.getFilms().forEach((film) => film.genres.forEach((genre) => filmGenres.add(genre)));
     filmsModel.setGenres(filmGenres);
     render(siteHeader, userProfileView, RenderPosition.BEFOREEND);
     render(siteMain, statisticComponent, RenderPosition.BEFOREEND);
-    render(footerStatistics, new FilmsQuanityView(filmsModel.getFilms()), RenderPosition.BEFOREEND);
+    render(footerStatistics, new FilmsQuantityView(filmsModel.getFilms()), RenderPosition.BEFOREEND);
   })
   .catch(() => filmsModel.setFilms([], UpdateType.INIT));

@@ -7,28 +7,28 @@ export default class Films extends Observer {
     this._filmsGenres = [];
   }
 
+  getFilms() {
+    return this._films;
+  }
+
   setFilms(films, updateType) {
     this._films = films.slice();
     this._notify(updateType);
   }
 
-  getFilms() {
-    return this._films;
-  }
-
   setComments(filmId, comments, updateType) {
-    const film = this._films.find((it) => it.id === filmId);
+    const film = this._films.find((item) => item.id === filmId);
     film.internalComments = comments;
-    film.comments = comments.map((it) => it.id);
+    film.comments = comments.map((item) => item.id);
     this._notify(updateType, film);
-  }
-
-  setGenres(genres) {
-    return this._filmsGenres = Array.from(genres);
   }
 
   getGenres() {
     return this._filmsGenres;
+  }
+
+  setGenres(genres) {
+    return this._filmsGenres = Array.from(genres);
   }
 
   updateItem(updateType, update) {
@@ -62,7 +62,7 @@ export default class Films extends Observer {
       ...this._films[filmIndex].internalComments.slice(commentIndex + 1),
     ];
 
-    this._films[filmIndex].comments = this._films[filmIndex].internalComments.map((it) => it.id);
+    this._films[filmIndex].comments = this._films[filmIndex].internalComments.map((item) => item.id);
 
     this._notify(updateType, this._films[filmIndex]);
   }

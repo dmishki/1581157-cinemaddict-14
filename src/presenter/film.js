@@ -13,7 +13,7 @@ import {
 } from '../utils/dates.js';
 
 import FilmCardView from '../view/film-card.js';
-import FilmDetailsPopupView from '../view/film-details.js';
+import FilmDetailsPopupView from '../view/film-details-popup.js';
 
 const siteBody = document.querySelector('body');
 
@@ -48,6 +48,14 @@ export default class Film {
     this._handlePopupWatchListClick = this._handleWatchListClick.bind(this);
     this._handlePopupWatchedClick = this._handleWatchedClick.bind(this);
     this._handlePopupFavoriteClick = this._handleFavoriteClick.bind(this);
+  }
+
+  setComments(film) {
+    return this._api.getComments(film)
+      .then((comments) => {
+        this._filmsModel.setComments(film.id, comments, UpdateType.PATCH);
+        this._filmDetailsPopupComponent.updateElement();
+      });
   }
 
   init(film) {
@@ -93,100 +101,15 @@ export default class Film {
     remove(prevfilmDetailsPopupComponent);
   }
 
-
-  setComments(film) {
-    return this._api.getComments(film)
-      .then((comments) => {
-        this._filmsModel.setComments(film.id, comments, UpdateType.PATCH);
-        this._filmDetailsPopupComponent.updateElement();
-      });
-  }
-
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._removeFilmDetailsPopup();
     }
   }
 
-  _removeFilmDetailsPopup() {
-    this._filmDetailsPopupComponent.reset(this._film);
-    this._filmDetailsPopupComponent.getElement().remove();
-    siteBody.classList.remove('hide-overflow');
-    this._mode = Mode.DEFAULT;
-    document.removeEventListener('keydown', this._escKeyDownHandler);
-    this._modelEvent(UpdateType.MINOR);
-  }
-
-  _escKeyDownHandler(evt) {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this._removeFilmDetailsPopup();
-    }
-  }
-
-  _handleWatchListClick() {
-    if (this._mode === Mode.OPENED) {
-      this._changeData(
-        UserAction.UPDATE_ITEM,
-        UpdateType.PATCH,
-        Object.assign({},
-          this._film, {
-            isWatchlist: !this._film.isWatchlist,
-          }));
-      return;
-    }
-
-    this._changeData(
-      UserAction.UPDATE_ITEM,
-      UpdateType.MAJOR,
-      Object.assign({},
-        this._film, {
-          isWatchlist: !this._film.isWatchlist,
-        }));
-  }
-
-  _handleWatchedClick() {
-    if (this._mode === Mode.OPENED) {
-      this._changeData(
-        UserAction.UPDATE_ITEM,
-        UpdateType.PATCH,
-        Object.assign({},
-          this._film, {
-            isWatched: !this._film.isWatched,
-            watchingDate: makeTodayDate(),
-          }));
-      return;
-    }
-
-    this._changeData(
-      UserAction.UPDATE_ITEM,
-      UpdateType.MAJOR,
-      Object.assign({},
-        this._film, {
-          isWatched: !this._film.isWatched,
-          watchingDate: makeTodayDate(),
-        }));
-  }
-
-  _handleFavoriteClick() {
-    if (this._mode === Mode.OPENED) {
-      this._changeData(
-        UserAction.UPDATE_ITEM,
-        UpdateType.PATCH,
-        Object.assign({},
-          this._film, {
-            isFavorite: !this._film.isFavorite,
-          }));
-      return;
-    }
-
-    this._changeData(
-      UserAction.UPDATE_ITEM,
-      UpdateType.MAJOR,
-      Object.assign({},
-        this._film, {
-          isFavorite: !this._film.isFavorite,
-        }));
+  destroy() {
+    remove(this._filmCardComponent);
+    remove(this._filmDetailsPopupComponent);
   }
 
   setViewState(state, comment) {
@@ -199,8 +122,9 @@ export default class Film {
 
     switch (state) {
       case State.ADDING:
-        this._filmDetailsPopupComponent.updateData({
-          isAdding: true,
+        document.querySelector('.film-details__comment-input').disabled = true;
+        document.querySelectorAll('.film-details__emoji-item').forEach((emoji) => {
+          emoji.disabled = true;
         });
         break;
       case State.DELETING:
@@ -226,8 +150,53 @@ export default class Film {
       });
   }
 
-  destroy() {
-    remove(this._filmCardComponent);
-    remove(this._filmDetailsPopupComponent);
+  _removeFilmDetailsPopup() {
+    this._filmDetailsPopupComponent.reset(this._film);
+    this._filmDetailsPopupComponent.getElement().remove();
+    siteBody.classList.remove('hide-overflow');
+    this._mode = Mode.DEFAULT;
+    document.removeEventListener('keydown', this._escKeyDownHandler);
+    this._modelEvent(UpdateType.MINOR);
+  }
+
+  _escKeyDownHandler(evt) {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this._removeFilmDetailsPopup();
+    }
+  }
+
+  _handleWatchListClick() {
+    const updateType = this._mode === Mode.OPENED ? UpdateType.PATCH : UpdateType.UPDATE;
+    this._changeData(
+      UserAction.UPDATE_ITEM,
+      updateType,
+      Object.assign({},
+        this._film, {
+          isWatchlist: !this._film.isWatchlist,
+        }));
+  }
+
+  _handleWatchedClick() {
+    const updateType = this._mode === Mode.OPENED ? UpdateType.PATCH : UpdateType.UPDATE;
+    this._changeData(
+      UserAction.UPDATE_ITEM,
+      updateType,
+      Object.assign({},
+        this._film, {
+          isWatched: !this._film.isWatched,
+          watchingDate: makeTodayDate(),
+        }));
+  }
+
+  _handleFavoriteClick() {
+    const updateType = this._mode === Mode.OPENED ? UpdateType.PATCH : UpdateType.UPDATE;
+    this._changeData(
+      UserAction.UPDATE_ITEM,
+      updateType,
+      Object.assign({},
+        this._film, {
+          isFavorite: !this._film.isFavorite,
+        }));
   }
 }

@@ -9,7 +9,7 @@ const countFilmsByGenre = (films, genre) => {
 };
 
 const calculateTotalDuration = (films) => {
-  return films.reduce((acc, it) => acc + it.runtime, 0);
+  return films.reduce((acc, film) => acc + film.runtime, 0);
 };
 
 const calculateTotalFilmsStats = (films, genres) => {

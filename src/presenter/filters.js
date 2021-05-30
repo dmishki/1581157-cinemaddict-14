@@ -31,41 +31,6 @@ export default class Filters {
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
-  init() {
-    const filters = this._getFilters();
-    const prevFilterComponent = this._filterComponent;
-
-    this._filterComponent = new FiltersView(filters, this._filterModel.getFilter());
-    this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
-
-    if (prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent, RenderPosition.AFTERBEGIN);
-      return;
-    }
-
-    replace(this._filterComponent, prevFilterComponent);
-    remove(prevFilterComponent);
-  }
-
-  _handleModelEvent() {
-    this.init();
-  }
-
-  _handleFilterTypeChange(filterType) {
-    if (this._filterModel.getFilter() === filterType) {
-      return;
-    }
-
-    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
-  }
-
-  removeActiveClass() {
-    const activeElement = this._filterComponent.getElement().querySelector('.main-navigation__item--active');
-    if (activeElement) {
-      activeElement.classList.remove('main-navigation__item--active');
-    }
-  }
-
   _getFilters() {
     const films = this._filmsModel.getFilms();
 
@@ -90,5 +55,40 @@ export default class Filters {
       count: filter[FilterType.FAVORITES](films).length,
     },
     ];
+  }
+
+  init() {
+    const filters = this._getFilters();
+    const prevFilterComponent = this._filterComponent;
+
+    this._filterComponent = new FiltersView(filters, this._filterModel.getFilter());
+    this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
+
+    if (prevFilterComponent === null) {
+      render(this._filterContainer, this._filterComponent, RenderPosition.AFTERBEGIN);
+      return;
+    }
+
+    replace(this._filterComponent, prevFilterComponent);
+    remove(prevFilterComponent);
+  }
+
+  removeActiveClass() {
+    const activeElement = this._filterComponent.getElement().querySelector('.main-navigation__item--active');
+    if (activeElement) {
+      activeElement.classList.remove('main-navigation__item--active');
+    }
+  }
+
+  _handleModelEvent() {
+    this.init();
+  }
+
+  _handleFilterTypeChange(filterType) {
+    if (this._filterModel.getFilter() === filterType) {
+      return;
+    }
+
+    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
   }
 }

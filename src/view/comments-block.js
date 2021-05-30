@@ -20,22 +20,21 @@ const createCommentsTemplate = (data) => {
     comment,
     emoji,
     isEmoji,
-    isAdding,
     isDeleting,
     deletingCommentId,
   } = data;
 
   const generateComments = () => {
-    return `${internalComments.map((it) => `<li class="film-details__comment">
+    return `${internalComments.map((item) => `<li class="film-details__comment">
    <span class="film-details__comment-emoji">
-     <img src="./images/emoji/${it.emoji}.png" width="55" height="55" alt="emoji-${it.emoji}">
+     <img src="./images/emoji/${item.emoji}.png" width="55" height="55" alt="emoji-${item.emoji}">
    </span>
    <div>
-     <p class="film-details__comment-text">${it.comment}</p>
+     <p class="film-details__comment-text">${item.comment}</p>
      <p class="film-details__comment-info">
-       <span class="film-details__comment-author">${it.author}</span>
-       <span class="film-details__comment-day">${createCommentsDateTemplate(it.date)}</span>
-       <button class="film-details__comment-delete" ${isDeleting ? 'disabled' : ''}>${isDeleting && it.id === deletingCommentId ? 'Deleting...' : 'Delete'}</button>
+       <span class="film-details__comment-author">${item.author}</span>
+       <span class="film-details__comment-day">${createCommentsDateTemplate(item.date)}</span>
+       <button class="film-details__comment-delete" ${isDeleting && item.id === deletingCommentId ? 'disabled' : ''}>${isDeleting && item.id === deletingCommentId ? 'Deleting...' : 'Delete'}</button>
      </p>
    </div>
    </li>`).join('')}`;
@@ -52,26 +51,26 @@ const createCommentsTemplate = (data) => {
       </div>
 
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isAdding ? 'disabled' : ''}>${comment}</textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"}>${comment}</textarea>
       </label>
 
       <div class="film-details__emoji-list">
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile"  ${isAdding ? 'disabled' : ''}${emoji === 'smile' ? 'checked' : ''}>
+        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile"}${emoji === 'smile' ? 'checked' : ''}>
         <label class="film-details__emoji-label" for="emoji-smile">
           <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
         </label>
 
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${isAdding ? 'disabled' : ''} ${emoji === 'sleeping' ? 'checked' : ''}>
+        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping"} ${emoji === 'sleeping' ? 'checked' : ''}>
         <label class="film-details__emoji-label" for="emoji-sleeping">
           <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
         </label>
 
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${isAdding ? 'disabled' : ''} ${emoji === 'puke' ? 'checked' : ''}>
+        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke"} ${emoji === 'puke' ? 'checked' : ''}>
         <label class="film-details__emoji-label" for="emoji-puke">
           <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
         </label>
 
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${isAdding ? 'disabled' : ''} ${emoji === 'angry' ? 'checked' : ''}>
+        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry"} ${emoji === 'angry' ? 'checked' : ''}>
         <label class="film-details__emoji-label" for="emoji-angry">
           <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
         </label>
@@ -116,7 +115,7 @@ export default class CommentsBlock extends SmartView {
 
     this.getElement()
       .querySelectorAll('.film-details__comment-delete')
-      .forEach((it, index) => it.addEventListener('click', (evt) => this._deleteClickHandler(evt, index, this._data)));
+      .forEach((button, index) => button.addEventListener('click', (evt) => this._deleteClickHandler(evt, index, this._data)));
   }
 
   _deleteClickHandler(evt, index, film) {
@@ -127,12 +126,6 @@ export default class CommentsBlock extends SmartView {
         comment: this._comments[index],
         id: film.id,
       }, film);
-  }
-
-  _resetInputsValues() {
-    this._data.isEmoji = false;
-    this._data.comment = '';
-    this._data.emoji = '';
   }
 
   _addCommentHandler(evt, film) {
@@ -146,7 +139,6 @@ export default class CommentsBlock extends SmartView {
           },
         },
         film);
-      this._resetInputsValues();
     }
   }
 
