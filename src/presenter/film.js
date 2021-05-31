@@ -115,7 +115,6 @@ export default class Film {
   setViewState(state, comment) {
     const resetFormState = () => {
       this._filmDetailsPopupComponent.updateData({
-        isAdding: false,
         isDeleting: false,
       });
     };
