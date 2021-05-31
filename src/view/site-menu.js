@@ -18,15 +18,6 @@ export default class SiteMenu extends AbstractView {
     this._menuClickHandler = this._menuClickHandler.bind(this);
   }
 
-  getTemplate() {
-    return createSiteMenuTemplate();
-  }
-
-  setMenuClickHandler(callback) {
-    this._callback.menuClick = callback;
-    this.getElement().addEventListener('click', this._menuClickHandler);
-  }
-
   show() {
     this.getElement()
       .querySelector('.main-navigation__additional')
@@ -37,6 +28,15 @@ export default class SiteMenu extends AbstractView {
     this.getElement()
       .querySelector('.main-navigation__additional')
       .classList.remove('main-navigation__additional--active');
+  }
+
+  getTemplate() {
+    return createSiteMenuTemplate();
+  }
+
+  setMenuClickHandler(callback) {
+    this._callback.menuClick = callback;
+    this.getElement().addEventListener('click', this._menuClickHandler);
   }
 
   _menuClickHandler(evt) {

@@ -190,6 +190,13 @@ export default class Stats extends SmartView {
     this.restoreHandlers();
   }
 
+  restoreHandlers() {
+    this._filmsModel.addObserver(this._handleModelEvent);
+    this._renderChart();
+    this.getElement().querySelectorAll('.statistic__filters-label')
+      .forEach((item) => item.addEventListener('click', this._statsFilterClickHandler));
+  }
+
   getTemplate() {
     return createStatsTemplate(this._data, this._currentFilterType, this._filmsModel.getGenres());
   }
@@ -198,13 +205,6 @@ export default class Stats extends SmartView {
     this._currentFilterType = StatsDate.ALL;
     this.handleStatsFilterClick(StatsDate.ALL);
     this._renderChart();
-  }
-
-  restoreHandlers() {
-    this._filmsModel.addObserver(this._handleModelEvent);
-    this._renderChart();
-    this.getElement().querySelectorAll('.statistic__filters-label')
-      .forEach((item) => item.addEventListener('click', this._statsFilterClickHandler));
   }
 
   handleStatsFilterClick(statsDate) {

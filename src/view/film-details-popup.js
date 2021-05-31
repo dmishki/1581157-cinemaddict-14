@@ -128,6 +128,10 @@ export default class FilmDetailsPopup extends SmartView {
     this._setInnerHandlers();
   }
 
+  restoreHandlers() {
+    this._setInnerHandlers();
+  }
+
   getTemplate() {
     return createFilmDetailsPopupTemplate(this._data);
   }
@@ -141,10 +145,6 @@ export default class FilmDetailsPopup extends SmartView {
   reset(film) {
     this.updateData(
       FilmDetailsPopup.parseFilmCardToData(film));
-  }
-
-  restoreHandlers() {
-    this._setInnerHandlers();
   }
 
   setWatchListClickHandler(callback) {

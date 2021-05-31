@@ -92,12 +92,12 @@ export default class CommentsBlock extends SmartView {
     this._setInnerHandlers();
   }
 
-  getTemplate() {
-    return createCommentsTemplate(this._data);
-  }
-
   restoreHandlers() {
     this._setInnerHandlers();
+  }
+
+  getTemplate() {
+    return createCommentsTemplate(this._data);
   }
 
   _setInnerHandlers() {

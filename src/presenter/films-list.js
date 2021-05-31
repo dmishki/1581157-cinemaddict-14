@@ -60,21 +60,6 @@ export default class FilmsList {
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
-  _getFilms() {
-    const filterType = this._filterModel.getFilter();
-    const films = this._filmsModel.getFilms();
-    const filteredFilms = filter[filterType](films);
-
-    switch (this._currentSortType) {
-      case SortType.DATE:
-        return filteredFilms.sort(compareDates);
-      case SortType.RATING:
-        return filteredFilms.sort(compareRatings);
-    }
-
-    return filteredFilms;
-  }
-
   init() {
     if (this._isLoading) {
       this._renderFilmsSection();
@@ -94,6 +79,21 @@ export default class FilmsList {
     this._filmsSectionComponent.show();
     this._sortComponent.show();
     this._handleModelEvent(UpdateType.MAJOR);
+  }
+
+  _getFilms() {
+    const filterType = this._filterModel.getFilter();
+    const films = this._filmsModel.getFilms();
+    const filteredFilms = filter[filterType](films);
+
+    switch (this._currentSortType) {
+      case SortType.DATE:
+        return filteredFilms.sort(compareDates);
+      case SortType.RATING:
+        return filteredFilms.sort(compareRatings);
+    }
+
+    return filteredFilms;
   }
 
   _renderSort() {
@@ -223,7 +223,9 @@ export default class FilmsList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._filmPresenter[data.id].forEach((presenter) => presenter.init(data));
+        if (this._filmPresenter[data.id]) {
+          this._filmPresenter[data.id].forEach((presenter) => presenter.init(data));
+        }
         break;
       case UpdateType.MINOR:
         this._clearFilmsList();
@@ -250,6 +252,12 @@ export default class FilmsList {
     }
   }
 
+  _handleModeChange() {
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenters) => presenters.forEach((presenter) => presenter.resetView()));
+  }
+
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
@@ -273,11 +281,5 @@ export default class FilmsList {
     if (filmCount <= this._renderedFilmsCount) {
       remove(this._showMoreButtonComponent);
     }
-  }
-
-  _handleModeChange() {
-    Object
-      .values(this._filmPresenter)
-      .forEach((presenters) => presenters.forEach((presenter) => presenter.resetView()));
   }
 }

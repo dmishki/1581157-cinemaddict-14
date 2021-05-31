@@ -155,7 +155,7 @@ export default class Film {
     siteBody.classList.remove('hide-overflow');
     this._mode = Mode.DEFAULT;
     document.removeEventListener('keydown', this._escKeyDownHandler);
-    this._modelEvent(UpdateType.MINOR);
+    this._modelEvent(UpdateType.UPDATE);
   }
 
   _escKeyDownHandler(evt) {
